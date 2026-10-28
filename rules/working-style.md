@@ -52,3 +52,6 @@
 - **Brainstorming mode.**
   - When the owner says it's brainstorming, give ideas and short answers only.
   - Hold plans, steps and time estimates until the owner decides.
+- **Time limits.**
+  - When the owner gives a time limit, finish the asked-for result inside it.
+  - Drop side quests, and propose them as follow-ups.
