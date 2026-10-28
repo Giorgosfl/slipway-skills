@@ -38,3 +38,9 @@
   - Do exactly the action the owner names: "stage" means stage, not commit.
   - When the owner questions a step and it isn't needed, drop it.
   - Propose extra work as a follow-up instead of doing it.
+- **Session end.**
+  - Before stopping a session, everything is committed, and pushed where the Outward actions rule allows.
+  - Merged branches and their worktrees are deleted.
+  - Background tasks are stopped, and test devices shut down.
+  - Issues are updated.
+  - The memory file gets anything learned in the session.
