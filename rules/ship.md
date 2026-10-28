@@ -17,3 +17,9 @@
   - Prune stale remote branches and worktree records.
   - Keep a branch only with a stated reason, such as another process still using it.
   - Check it: main is the only branch left, and the main checkout the only worktree.
+- **One version source.**
+  - The version is `MAJOR.MINOR.PATCH`, kept in one file only.
+  - Major: a new product phase. Minor: new features. Patch: fixes only.
+  - Bump it in its own commit, at the start of work on the next release.
+  - That way no test build is mistaken for the version that's live.
+  - Build numbers are separate, and only ever go up.
