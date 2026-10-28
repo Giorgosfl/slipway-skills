@@ -88,3 +88,6 @@
   - That covers secure fields, credential storage and anything the app keeps private.
   - A change that weakens one needs the owner's OK first.
   - Raise it as a finding of its own, not a side note in a summary.
+- **Commit messages.**
+  - Write the subject as a plain imperative: "Add bookmark list".
+  - Start with the verb, without prefixes like "feat:" or "fix:".
