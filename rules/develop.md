@@ -19,3 +19,9 @@
   - Write code plain enough to read without a comment explaining it.
 - **DRY.**
   - The same logic, markup or styling written twice becomes one shared piece.
+- **KISS.**
+  - Make the smallest change that works.
+  - Make it in the one place every caller goes through, not in each caller.
+  - Use the platform's built-in feature before writing your own.
+  - Use an installed dependency before adding a new one.
+  - Use a plain function before a class or a factory.
