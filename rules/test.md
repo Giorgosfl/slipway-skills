@@ -35,3 +35,10 @@
   - A preview or dev page of a device app helps development but never counts as test evidence.
   - Example: a React Native screen passes in the iOS Simulator, not in a web preview.
   - Check it: each test report names the platform and build it ran on.
+- **Runner agents.**
+  - Test-case runners use a mid-tier model at high effort, to keep long runs fast and cheap.
+  - Today that means Sonnet 5.5, not Opus or Fable.
+  - A runner reports pass or fail for each case, with its evidence.
+  - Evidence is what was seen, such as a screenshot, and what was checked, such as a value or a state.
+  - A failing case sends the work back to fixing and review.
+  - Check it: every case in the report has a verdict and its evidence.
