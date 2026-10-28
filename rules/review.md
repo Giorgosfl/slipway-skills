@@ -20,3 +20,9 @@
   - If round 4 still finds defects, stop and ask the owner: the change likely needs a decision.
   - Finish the rounds before merging, even when the work runs long.
   - Cut the rounds short only when the owner says so.
+- **Close every finding.**
+  - Fix every review finding, or record why it stands.
+  - Fix clear defects in the same change.
+  - A finding that needs a decision becomes an issue, and the work moves on.
+  - After fixing, re-run each reviewer whose area the fixes touched.
+  - Check it: every finding is marked fixed, recorded or filed.
