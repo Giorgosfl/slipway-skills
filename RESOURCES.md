@@ -14,4 +14,4 @@ The skills and tools every slipway rule and skill builds on. A consumer project 
 
 ## Licences
 
-None of the seven repos has a licence GitHub can detect (checked 2026-10-28). Linking to them and installing them is fine; copying their content into this repo waits until each licence is verified (`rules/develop.md` → Licence provenance).
+Checked against each repo's `LICENSE` file on 2026-10-28: impeccable is Apache 2.0, and DOX, ponytail, Matt Pocock's skills, Context7, security-audit-skill and i-have-adhd are MIT. Both allow linking, installing and copying, as long as the licence and copyright notice travel with any copied content (`rules/develop.md` → Licence provenance).
