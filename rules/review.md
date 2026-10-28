@@ -26,3 +26,9 @@
   - A finding that needs a decision becomes an issue, and the work moves on.
   - After fixing, re-run each reviewer whose area the fixes touched.
   - Check it: every finding is marked fixed, recorded or filed.
+- **Reviewers only read.**
+  - Reviewers read the change; they never edit, commit or switch branches.
+  - Reviewers don't start agents of their own.
+  - Each finding gives the file, the line, what goes wrong and a fix.
+  - Findings come ranked, most serious first.
+  - Why: a reviewer that moves the branch can break another session working in the same checkout.
