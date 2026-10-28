@@ -30,3 +30,9 @@
   - Depend on another module's small public interface, never on its internals.
   - The app's entry point only wires modules together.
   - Each module owns its own state.
+- **Validate at boundaries.**
+  - Data coming from outside is checked by a schema, once, where it enters.
+  - Outside means forms, API and IPC calls, files, stored data, URLs and external services.
+  - Use the schema instead of scattered type checks.
+  - Read stored data leniently: a bad field falls back to its default on its own.
+  - Read API and IPC input strictly: a bad field rejects the whole call.
