@@ -4,22 +4,26 @@ Reusable rules and skills for the whole life of an app, product or server: start
 
 A slipway is the ramp where a ship is built and launched.
 
-## Where it stands
+## Rules
 
-- **Round 1 (done):** the rules already written in my projects were collected, one by one, into [`rules-round-1.md`](rules-round-1.md). Rules that came from someone else's framework or skill are listed there under "Not ours" and are not carried over.
-- **Round 2 (next):** go through the list, decide what each rule becomes, and sort the kept ones into [`rules/`](rules/).
+The rules live in [`rules/`](rules/), one file per stage. A sub file holds rules that apply only to one kind of project.
 
-## Layout
-
-| Path | What it holds |
+| File | What it holds |
 |---|---|
-| `rules-round-1.md` | The round-1 list, grouped by stage, each rule with the project it came from |
 | `rules/start.md` | Setting up a project or a session |
 | `rules/develop.md` | Writing and refactoring code |
+| `rules/develop.react.md` | React code only |
+| `rules/develop.ui.md` | Apps with a user interface only |
 | `rules/test.md` | Tests and test cases |
 | `rules/review.md` | Reviews before a merge |
 | `rules/ship.md` | Merging, versioning and releasing |
+| `rules/ship.store.md` | Apps sold through an app store only |
+| `rules/ship.website.md` | Products with a website only |
 | `rules/maintain.md` | Bugs, issues and keeping things clean |
-| `rules/working-style.md` | How agents work with me |
+| `rules/working-style.md` | How agents work with the owner |
+
+## Changing the rules
+
+Rules are added, edited and removed one at a time. [`AGENTS.md`](AGENTS.md) holds the checks every rule goes through and how each change is made.
 
 Skill names will start with `slipway-` so they never clash with other installed skills.
