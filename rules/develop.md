@@ -75,3 +75,11 @@
   - Split heavy side work into small pieces that yield to the user.
   - Example: a reading app keeps scrolling and switching books smoothly while new chapters download.
   - Check it by using the app's main feature while the side work runs.
+- **Licence provenance.**
+  - Before adding third-party content, verify its licence allows how we ship.
+  - Content means anything we didn't make: fonts, images, icons, sounds, books, sample data, test fixtures and code copied from elsewhere.
+  - Record each item's source link and licence in a sources file in the repo.
+  - Credit it wherever its licence asks, such as an acknowledgements page.
+  - Content without a verified licence stays out.
+  - Example: test comics come from public-domain or Creative Commons sources, each listed with its link and licence.
+  - Check it: every third-party file in the repo has an entry in the sources file.
