@@ -27,3 +27,8 @@
   - Every user-visible change adds a line under "Unreleased" in the changelog, in the same change.
   - At release, "Unreleased" becomes that version's section.
   - Rewritten for readers, it becomes the release notes.
+- **Release branches and tags.**
+  - Each minor version gets its own release branch, cut from main when it's ready to test.
+  - Every build of that version comes from its release branch.
+  - Fixes go on the release branch and merge back into main the same day.
+  - Tag the commit that ships with its version, such as `v1.2.0`.
