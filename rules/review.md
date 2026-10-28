@@ -11,3 +11,12 @@
   - UI: a design critique and audit, skipped only when no UI changed.
   - Today these run as: `ponytail`, `grilling`, `ctx7` docs, `security-audit`, `impeccable`.
   - Check it: every reviewer has reported before the merge.
+- **Review rounds.**
+  - Repeat review rounds until a round finds no defect.
+  - Rounds 1 and 2 review the whole branch.
+  - From round 3, re-run only the reviews that had findings, on the commits since the last round.
+  - From round 3, only defects count: wrong behavior, a crash, lost data, a store rejection, a broken rule.
+  - Fix wording and style findings when they're cheap; they don't call for another round.
+  - If round 4 still finds defects, stop and ask the owner: the change likely needs a decision.
+  - Finish the rounds before merging, even when the work runs long.
+  - Cut the rounds short only when the owner says so.
