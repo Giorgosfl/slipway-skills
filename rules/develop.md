@@ -83,3 +83,8 @@
   - Content without a verified licence stays out.
   - Example: test comics come from public-domain or Creative Commons sources, each listed with its link and licence.
   - Check it: every third-party file in the repo has an entry in the sources file.
+- **Security stays.**
+  - Keep every security measure in place, even when it blocks a test or shows a prompt.
+  - That covers secure fields, credential storage and anything the app keeps private.
+  - A change that weakens one needs the owner's OK first.
+  - Raise it as a finding of its own, not a side note in a summary.
