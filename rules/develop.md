@@ -68,3 +68,10 @@
   - Fix what a check reports; silence a check only with a stated reason.
   - Keep git hooks on.
   - Skip a hook only for a deliberate reason, stated in the commit message.
+- **Main use first.**
+  - When building or extending a feature, plan which work runs on the side: fetching, downloads, sync, imports.
+  - Side work never blocks what the app is for: the user keeps using it while that work runs.
+  - Keep side work off the main thread, and cap how much CPU, memory and network it takes.
+  - Split heavy side work into small pieces that yield to the user.
+  - Example: a reading app keeps scrolling and switching books smoothly while new chapters download.
+  - Check it by using the app's main feature while the side work runs.
