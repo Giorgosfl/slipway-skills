@@ -31,3 +31,6 @@
   - Track work in the issue tracker: each issue is the spec for its change.
   - Each feature is a sub-issue of a parent map of the work.
   - A finished issue gets a summary comment before it closes.
+- **Clean workspace.**
+  - Keep the projects folder free of worktrees and folders not in use.
+  - Make a release worktree only when a release needs it, and remove it after.
