@@ -17,3 +17,5 @@
   - Delete dead code.
   - Split a function instead of giving it a boolean flag that switches its behavior.
   - Write code plain enough to read without a comment explaining it.
+- **DRY.**
+  - The same logic, markup or styling written twice becomes one shared piece.
