@@ -15,3 +15,7 @@
 - **Own worktree.**
   - Every session works in its own worktree.
   - Prepare it before working, so checks and builds run in it.
+- **See what landed.**
+  - Before launching agents, check what landed on the working branch.
+  - That includes work from other people and other AI tools.
+  - Agents build on that work instead of redoing it.
