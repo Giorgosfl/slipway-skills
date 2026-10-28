@@ -82,3 +82,12 @@
   - Those cases run later as manual steps, with the owner.
   - Example: "needs-human: the page edge looks clipped on iPad; can't tell if that's the design."
   - Check it: the report covers every case in the set, each with a verdict or "not run".
+- **Test code.**
+  - Pure logic gets behavior tests: inputs in, expected outputs out.
+  - A test that searches the source checks only wiring whose breakage would be silent, never comments, copy or whitespace.
+  - Fixtures stay small and give the same result every run.
+  - No test depends on a live external service.
+  - Each test runs on its own, independent of the others.
+  - Name each test after the user-visible behavior it protects.
+  - Example: "newest-first puts the latest-added series on top", not "sort test 2".
+  - Check it: the suite passes offline, in any order.
