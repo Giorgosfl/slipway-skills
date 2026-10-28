@@ -7,3 +7,8 @@
   - Commit it with the work.
   - Write one fact per bullet, with its reason.
   - Never keep it in an agent's private memory.
+- **Session status.**
+  - Give a status overview at the start and end of every session.
+  - At the start: what landed since the last session, and the open bugs.
+  - At the end: what this session did, and what it left open.
+  - Both list leftovers: worktrees, branches, and test devices or processes still running.
