@@ -56,3 +56,8 @@
   - Its licence allows how we ship the app.
   - It has no known vulnerabilities, and its install scripts are checked.
   - Only a library that shapes the architecture, such as a data layer, needs a recorded decision.
+- **Small chunks.**
+  - Cut a large feature into chunks that can each be reviewed in one sitting.
+  - Each chunk runs and is committed on its own.
+  - Work through the chunks in order without waiting for a "go".
+  - After each chunk, report what now works and what's next.
