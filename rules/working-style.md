@@ -15,3 +15,7 @@
   - "It builds" and "the code looks right" don't mean it works.
   - Example: "Import works on iPhone; iPad not tested, no iPad simulator was running."
   - Check it: every "works" in a report points to its test or evidence.
+- **Cutting a batch short.**
+  - When the owner cuts a batch short, merge what's already reviewed.
+  - Close the issues it fixes.
+  - Put every unrun check and unfixed bug on one follow-up issue, so nothing is lost.
