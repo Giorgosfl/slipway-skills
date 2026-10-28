@@ -60,3 +60,6 @@
   - Carry the work through without asking: follow-ups, review rounds until clean, re-tests, commits.
   - Stay within the Outward actions rule.
   - Leave for the owner only what needs a decision.
+- **Read what the owner sends.**
+  - When the owner sends a link or a source mid-discussion, read it.
+  - Update the recommendation if it changes the facts.
