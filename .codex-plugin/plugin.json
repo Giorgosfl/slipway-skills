@@ -1,0 +1,27 @@
+{
+  "name": "slipway",
+  "version": "0.1.0",
+  "description": "Curated engineering rules for every stage of an app, product or server, with hooks that apply them and a setup skill for the skills they build on.",
+  "author": {
+    "name": "Giorgosfl",
+    "url": "https://github.com/Giorgosfl"
+  },
+  "homepage": "https://github.com/Giorgosfl/slipway-skills",
+  "repository": "https://github.com/Giorgosfl/slipway-skills",
+  "license": "MIT",
+  "keywords": ["rules", "workflow", "code-review", "testing", "release", "hooks"],
+  "interface": {
+    "displayName": "Slipway",
+    "shortDescription": "Engineering rules for every stage, applied by hooks",
+    "longDescription": "Curated rules for starting, developing, testing, reviewing, shipping and maintaining an app, product or server. Hooks load the rules at session start, guard outward git and GitHub actions, and check verification before finishing. slipway-setup installs the skills the rules build on, after asking.",
+    "developerName": "Giorgosfl",
+    "category": "Productivity",
+    "capabilities": ["Instructions", "Lifecycle hooks"],
+    "websiteURL": "https://github.com/Giorgosfl/slipway-skills",
+    "defaultPrompt": [
+      "Run slipway-setup for this project.",
+      "Which slipway rules apply to this task?",
+      "Review this change against the slipway rules."
+    ]
+  }
+}

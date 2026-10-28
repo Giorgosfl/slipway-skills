@@ -1,0 +1,13 @@
+{
+  "name": "slipway",
+  "version": "0.1.0",
+  "description": "Curated engineering rules for every stage of an app, product or server, with hooks that apply them and a setup skill for the skills they build on.",
+  "author": {
+    "name": "Giorgosfl",
+    "url": "https://github.com/Giorgosfl"
+  },
+  "homepage": "https://github.com/Giorgosfl/slipway-skills",
+  "repository": "https://github.com/Giorgosfl/slipway-skills",
+  "license": "MIT",
+  "keywords": ["rules", "workflow", "code-review", "testing", "release", "hooks"]
+}

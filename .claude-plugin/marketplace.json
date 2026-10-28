@@ -1,0 +1,16 @@
+{
+  "name": "slipway-skills",
+  "description": "slipway: curated engineering rules with hooks that apply them, for Claude Code and Codex.",
+  "owner": {
+    "name": "Giorgosfl",
+    "url": "https://github.com/Giorgosfl"
+  },
+  "plugins": [
+    {
+      "name": "slipway",
+      "source": "./",
+      "description": "Curated engineering rules for every stage of an app, product or server, with hooks that apply them and a setup skill for the skills they build on.",
+      "category": "productivity"
+    }
+  ]
+}
