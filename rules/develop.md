@@ -91,3 +91,8 @@
 - **Commit messages.**
   - Write the subject as a plain imperative: "Add bookmark list".
   - Start with the verb, without prefixes like "feat:" or "fix:".
+- **Brand mark everywhere.**
+  - The icon, logo and brand colours look the same on every surface.
+  - A change to any of them updates every surface in the same change.
+  - Surfaces include the app icon, the in-app mark, the design doc, the website and the store listing.
+  - Check it: list every surface in the change, and look at each one.
