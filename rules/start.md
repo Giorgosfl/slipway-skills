@@ -1,12 +1,12 @@
 # Start
 
 - **Repo working memory.**
-  - Working memory lives in a file in the repo: `docs/agents/memory.md`.
+  - Working memory lives in one file in the repo, which every agent tool reads.
   - Read it at the start of every session.
   - Update it when the owner gives guidance or confirms an approach.
   - Commit it with the work.
   - Write one fact per bullet, with its reason.
-  - Never keep it in an agent's private memory.
+  - Keep project memory there, and leave an agent tool's built-in memory unused for the project.
 - **Session status.**
   - Give a status overview at the start and end of every session.
   - At the start: what landed since the last session, and the open bugs.
