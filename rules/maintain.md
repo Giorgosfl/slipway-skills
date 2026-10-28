@@ -27,3 +27,7 @@
   - Each issue has steps, expected, actual and the build number.
   - Each names the matching test case in its "Done when".
   - Why: the fixes then go through review and test like any other change.
+- **Issues are the spec.**
+  - Track work in the issue tracker: each issue is the spec for its change.
+  - Each feature is a sub-issue of a parent map of the work.
+  - A finished issue gets a summary comment before it closes.
