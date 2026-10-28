@@ -19,3 +19,6 @@
   - Fix in batches, one commit per issue.
   - Stop when no bug is open and every runnable case passes.
   - Design questions and release work wait for the owner.
+- **Bugs first.**
+  - Fix every open bug before running a full test round.
+  - Why: a full round over known bugs only finds them again.
