@@ -23,3 +23,7 @@
   - Bump it in its own commit, at the start of work on the next release.
   - That way no test build is mistaken for the version that's live.
   - Build numbers are separate, and only ever go up.
+- **Changelog.**
+  - Every user-visible change adds a line under "Unreleased" in the changelog, in the same change.
+  - At release, "Unreleased" becomes that version's section.
+  - Rewritten for readers, it becomes the release notes.
