@@ -48,3 +48,11 @@
   - Build for the uses the code has today, not ones it might have later.
   - Add an abstraction or a layer only when a current use needs it.
   - Hard-to-change choices, like data formats and public APIs, get design up front.
+- **New dependency.**
+  - Add one only for a problem the code has today.
+  - It replaces code we would otherwise write ourselves.
+  - It is actively maintained.
+  - It works on our platform.
+  - Its licence allows how we ship the app.
+  - It has no known vulnerabilities, and its install scripts are checked.
+  - Only a library that shapes the architecture, such as a data layer, needs a recorded decision.
