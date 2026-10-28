@@ -9,3 +9,9 @@
   - It lists what to read first.
   - It sets the scope and how to finish.
   - The agent reports only when done, blocked or failing.
+- **No untested claims.**
+  - Call a feature working only after it passed a test on the real platform.
+  - Say plainly what was not tested, and why.
+  - "It builds" and "the code looks right" don't mean it works.
+  - Example: "Import works on iPhone; iPad not tested, no iPad simulator was running."
+  - Check it: every "works" in a report points to its test or evidence.
