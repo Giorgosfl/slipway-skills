@@ -10,3 +10,10 @@
   - Merge a feature branch into main only after the full test suite passes on its latest commit.
   - If main has moved, bring it into the branch first and run the suite again.
   - Then fast-forward main and push.
+- **Clean up after merge.**
+  - A merge is done only when nothing of the branch is left.
+  - Delete the branch locally and on the remote.
+  - Remove its worktree.
+  - Prune stale remote branches and worktree records.
+  - Keep a branch only with a stated reason, such as another process still using it.
+  - Check it: main is the only branch left, and the main checkout the only worktree.
