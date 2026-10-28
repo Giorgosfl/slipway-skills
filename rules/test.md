@@ -67,3 +67,10 @@
   - The bug is fixed when that case passes.
   - Example: "cover missing after import" adds "Expected: the cover shows in the Library" to the import case.
   - Check it: every bug issue names a case, and that case fails before the fix.
+- **Case sets.**
+  - Tag each test case as core, a daily path, or full, an edge case.
+  - Before a merge, run every core case, plus every case the change adds or alters.
+  - Before a release, run the whole suite.
+  - Run it against the exact build being shipped.
+  - Example: a sort change runs the core cases and the sort cases; release 1.2 runs every case on the 1.2 build.
+  - Check it: each run report says which set ran, on which build.
