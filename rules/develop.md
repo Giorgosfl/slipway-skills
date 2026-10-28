@@ -25,3 +25,8 @@
   - Use the platform's built-in feature before writing your own.
   - Use an installed dependency before adding a new one.
   - Use a plain function before a class or a factory.
+- **SOLID.**
+  - Add a feature by adding a new module, not a new mode to an existing one.
+  - Depend on another module's small public interface, never on its internals.
+  - The app's entry point only wires modules together.
+  - Each module owns its own state.
