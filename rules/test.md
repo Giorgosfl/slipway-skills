@@ -36,12 +36,15 @@
   - Example: a React Native screen passes in the iOS Simulator, not in a web preview.
   - Check it: each test report names the platform and build it ran on.
 - **Runner agents.**
-  - Test-case runners use a mid-tier model at high effort, to keep long runs fast and cheap.
-  - Today that means Sonnet 5.5, not Opus or Fable.
+  - Routine test-case runs use lower-tier, non-frontier models to keep costs down.
   - A runner reports each case's verdict with its evidence (see Verdicts).
-  - Evidence is what was seen, such as a screenshot, and what was checked, such as a value or a state.
+  - Evidence shows what the runner saw and checked, such as a screenshot, value or state.
+  - Escalate only cases with conflicting results or evidence to a higher-tier model.
+  - Give that model the conflicting results and evidence to resolve the discrepancy.
   - A failing case sends the work back to fixing and review.
-  - Check it: every case in the report has a verdict and its evidence.
+  - Example: a runner reports a clipped button, but its screenshot shows the whole button; escalate that case.
+  - Check it: every case has a verdict and evidence.
+  - Check it: every higher-tier run names the discrepancy it investigated.
 - **Private data stays private.**
   - Test runs use invented sample data, never the owner's real data.
   - The sample data gets its own build or data folder, so a run can't touch the real data.
