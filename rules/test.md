@@ -51,3 +51,11 @@
   - Keep real data and secrets out of commits, issues, logs and screenshots.
   - Example: a desktop app has a "Sample" edition with invented titles and its own data folder.
   - Check it: no capture or commit from a run shows anything but sample data.
+- **Script what can be scripted.**
+  - Script a test case wherever a script can prove its Expected.
+  - A script can prove it when the result is readable: a label, a value or a state.
+  - Keep AI runners for what only a look at the screen can judge, like layout and spacing.
+  - Scripts are fast, cheap and give the same answer every run; AI runs cost time.
+  - The plain-language case stays the source of truth, and the script follows it.
+  - Example: "the series shows 12 chapters" is scripted; "the cover isn't cropped" goes to an AI runner.
+  - Check it: each case an AI runner ran has an Expected no script could read.
