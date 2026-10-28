@@ -61,3 +61,5 @@
   - Each chunk runs and is committed on its own.
   - Work through the chunks in order without waiting for a "go".
   - After each chunk, report what now works and what's next.
+- **One commit per verified step.**
+  - Commit each feature, fix or test checkpoint separately, once it is verified.
