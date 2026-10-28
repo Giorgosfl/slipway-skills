@@ -9,6 +9,31 @@ The rules build on the skills and tools listed in `RESOURCES.md`. Point to a res
 - `rules/<category>.md`: one file per stage — `start`, `develop`, `test`, `review`, `ship`, `maintain`, `working-style`.
 - `rules/<category>.<scope>.md`: a sub file for rules that apply only to one kind of project, such as `develop.react.md`, `develop.ui.md`, `ship.store.md`, `ship.website.md`. It opens with one line: "Rules from <category>.md that apply only to <scope>."
 - Make a new sub file only when a rule truly can't be made agnostic.
+- `skills/<name>/SKILL.md`: the plugin's skills, `slipway-rules`, `slipway-setup`, `slipway-update` and `slipway-uninstall`. Every skill name starts with `slipway-`. `slipway-update` reads slipway's version from `.claude-plugin/plugin.json` on GitHub, so a release isn't visible to it until both manifests carry the new `version`.
+- `hooks/hooks.json` and `hooks/*.sh`: the hooks that apply the rules, shared by Claude Code and Codex. `hooks/lib.sh` holds their shared helpers.
+- `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`: the plugin and its marketplace; Codex reads the same marketplace file.
+- `.codex-plugin/plugin.json`: Codex's manifest, which adds its `interface` fields.
+- `tests/hooks.test.sh`: runs every hook the way each app calls it.
+
+## Plugin and hooks
+
+One `hooks/hooks.json` serves both apps, so it uses only what both accept:
+
+- Top-level keys: only `description` and `hooks`. Handler fields: only `type`, `command` and `timeout`; Codex ignores `if`, `args` and `onFailure`, and Claude's marketplace validation has rejected Codex's `commandWindows`.
+- Neither manifest gets a `hooks` or `skills` field: both apps load `hooks/hooks.json` and `skills/` on their own, and a `hooks` field makes Claude Code report a duplicate.
+- Commands read the plugin root from the environment, `sh "$CLAUDE_PLUGIN_ROOT/hooks/x.sh"`, so a path with odd characters can't break the command.
+- SessionStart prints plain text; both apps add it to the model's context.
+- The hooks tell the apps apart by `PLUGIN_DATA`, which only Codex sets; Claude Code sets `CLAUDE_PLUGIN_DATA`.
+- PreToolUse: Claude Code gets `permissionDecision: "ask"`, with a `permissionDecisionReason` written for the owner and an `additionalContext` written for the agent. Claude Code shows the reason in the permission prompt; in a `-p` run with no one to answer, it denies the call and the agent reads the reason in the tool result, so the owner text must read sensibly to the agent too. Codex rejects "ask" and would run the tool anyway, and its `additionalContext` arrives only after the tool ran, so Codex gets "deny", with a reason written for the agent. Never mark the guard `async`.
+- The guard parses the command itself, in `awk`, in a way that works with BSD awk, mawk, gawk and busybox: it reads only `tool_input.command`; splits it into simple commands at `;`, `&`, `|`, newlines and subshells; skips comments and heredoc bodies; looks inside `$(…)`, backticks and `sh -c`; skips wrappers such as `sudo`, `env`, `timeout` and `xargs`; and looks at the real git or gh subcommand, `git subtree push` included. Hook-skipping variables (`HUSKY=0`, `LEFTHOOK=0`, `SKIP=`) count as a skipped hook. It's a guard rail for agents that follow the rules, not a security boundary: a long tail of shell forms will always get past it.
+- It sorts what it finds into five kinds, each with its own reason: `push` (push, merge, branch delete: the clean-reviews exception applies), `owner` (other GitHub writes: only when the owner asked), `force` (history rewrites, deletes, visibility changes: only when the owner asked for exactly this), `noverify` (skipped git hooks) and `pushnoverify` (a push that skips hooks: both conditions). A simple command that starts with `SLIPWAY_OK=1` passes.
+- Stop: Claude Code gets `hookSpecificOutput.additionalContext`, which it shows as feedback, not as an error. Codex accepts only `{"decision":"block","reason":"…"}` or nothing.
+- SessionStart records the repo's state, keyed by session and by the repo's shared git folder, and the list of worktrees that already exist. Stop sums the session's own checkout plus every worktree made since, and asks only when that sum differs from the session's start and from its last ask: work in a worktree the session made counts, other sessions' worktrees don't. Both read `cwd` from stdin and keep their state in the plugin's data folder; without one, SessionStart records nothing and Stop stays silent. SessionStart prints first and records the state in the background. git runs with `GIT_OPTIONAL_LOCKS=0`, so the hooks never take another session's index lock, and `git diff` runs with `--no-ext-diff --no-textconv`, so no user diff program runs or changes the sum. Stop marks its own ask with a `.asked` file, so only the continuation it caused counts as checked; one that `/goal` or another plugin started gets the normal check.
+- Matchers use only letters, digits, `_` and `|`, which both apps read the same way: `startup|resume|clear|compact|fork` and `Bash`. PowerShell is left out: `SLIPWAY_OK=1` isn't valid PowerShell.
+- On Windows, Claude Code runs the hooks in Git Bash, and without it they fail with an error notice; Codex runs them in the session's shell, PowerShell by default (`cmd.exe` only as a fallback), which can't run them.
+- Codex runs a plugin hook only after the owner trusts it in `/hooks`, and again after `hooks.json` changes. Changing a script needs no new trust.
+- Bump `version` in both manifests, in the same commit, for every release.
+- Check a change with `sh tests/hooks.test.sh` and `claude plugin validate . --strict`. Add a test case for every command shape the guard should catch or let through.
 
 ## Rule format
 
@@ -51,7 +76,7 @@ Run all of them on every rule you add or edit, in this order.
 - Never push unless the owner says so.
 - When the owner says "groom", rewrite the rule around its intent (check 14).
 - When the owner says "explain", explain plainly, with a real example from a project.
-- Before renaming or removing a rule, find the rules that name it: `Runner agents` points to `Verdicts`; `Session end` points to `Session status`; `Agent does what it can`, `Session end` and `Autopilot` point to `Outward actions`.
+- Before renaming or removing a rule, find the rules that name it: `Runner agents` points to `Verdicts`; `Session end` points to `Session status`; `Agent does what it can`, `Session end` and `Autopilot` point to `Outward actions`. The hooks and `slipway-rules` quote rule titles too: grep `hooks/` and `skills/` for the title.
 
 ## Working with the owner
 
