@@ -38,7 +38,7 @@
 - **Runner agents.**
   - Test-case runners use a mid-tier model at high effort, to keep long runs fast and cheap.
   - Today that means Sonnet 5.5, not Opus or Fable.
-  - A runner reports pass or fail for each case, with its evidence.
+  - A runner reports each case's verdict with its evidence (see Verdicts).
   - Evidence is what was seen, such as a screenshot, and what was checked, such as a value or a state.
   - A failing case sends the work back to fixing and review.
   - Check it: every case in the report has a verdict and its evidence.
@@ -74,3 +74,11 @@
   - Run it against the exact build being shipped.
   - Example: a sort change runs the core cases and the sort cases; release 1.2 runs every case on the 1.2 build.
   - Check it: each run report says which set ran, on which build.
+- **Verdicts.**
+  - Each case gets one verdict: pass, fail or needs-human.
+  - Each verdict has a one-line reason.
+  - Needs-human means the runner can't tell; it blocks a release until the owner looks.
+  - A case the runner can't run, such as one needing a real device, is reported as not run, never skipped silently.
+  - Those cases run later as manual steps, with the owner.
+  - Example: "needs-human: the page edge looks clipped on iPad; can't tell if that's the design."
+  - Check it: the report covers every case in the set, each with a verdict or "not run".
