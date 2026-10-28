@@ -24,6 +24,7 @@
   - Fix every review finding, or record why it stands.
   - Fix clear defects in the same change.
   - A finding that needs a decision becomes an issue, and the work moves on.
+  - That includes test runners' small findings: file them and fix them in the same round.
   - After fixing, re-run each reviewer whose area the fixes touched.
   - Check it: every finding is marked fixed, recorded or filed.
 - **Reviewers only read.**
