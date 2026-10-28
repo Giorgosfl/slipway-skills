@@ -12,3 +12,8 @@
   - Each has one reason to change.
   - A file that mixes concerns, such as routing, data and rendering, gets split.
   - A unit past about 150 lines is a signal to extract.
+- **Clean code.**
+  - Names say what a thing is or does.
+  - Delete dead code.
+  - Split a function instead of giving it a boolean flag that switches its behavior.
+  - Write code plain enough to read without a comment explaining it.
