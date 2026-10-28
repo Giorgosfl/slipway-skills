@@ -19,3 +19,6 @@
   - When the owner cuts a batch short, merge what's already reviewed.
   - Close the issues it fixes.
   - Put every unrun check and unfixed bug on one follow-up issue, so nothing is lost.
+- **Agent does what it can.**
+  - Do everything an agent can do itself, within the outward-actions rule.
+  - Collect what needs the owner, such as a real-device check, for their next hands-on test.
