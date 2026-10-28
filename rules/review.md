@@ -35,3 +35,7 @@
 - **Lighter review for non-code.**
   - A change with no app code, like docs, scripts or tests, gets the simplicity and design reviews only.
   - Add the UI review when it changes what users see, such as the website.
+- **Check the design doc first.**
+  - Before filing a look-and-feel finding as a bug, check the design doc.
+  - If the design allows what you saw, it isn't a bug.
+  - Put it to the owner as a choice instead.
