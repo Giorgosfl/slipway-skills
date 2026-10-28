@@ -2,6 +2,8 @@
 
 This repo holds reusable rules for the whole life of an app, product or server. The rules are for the projects that consume them, never for this repo itself: how this repo works is no reason to change, bend or exempt a rule.
 
+The rules build on the skills and tools listed in `RESOURCES.md`. Point to a resource instead of copying what it provides.
+
 ## Layout
 
 - `rules/<category>.md`: one file per stage — `start`, `develop`, `test`, `review`, `ship`, `maintain`, `working-style`.
@@ -32,7 +34,7 @@ Run all of them on every rule you add or edit, in this order.
 5. **Overlap and conflict:** with every rule already in `rules/`, and with the agent tool's own behavior. Join overlapping rules into one. A rule that allows acting "without asking" stays within the Outward actions rule.
 6. **No-op:** an agent already does this without being told? Drop it, or keep it only as the anchor line of a larger rule.
 7. **Wording:** a positive target, not a bare "never"; a done-state someone can check.
-8. **Borrowed:** from DOX, Matt Pocock's skills or impeccable? Those aren't carried here.
+8. **Borrowed:** does one of the resources in `RESOURCES.md` already provide it? Rules a resource already provides aren't copied; consumers get them from the resource.
 9. **Short lines:** split any long line into meaningful short ones, dropping nothing.
 10. **One home:** exactly one category or sub file, where the rule's work actually happens. Never copy a rule into a second file.
 11. **Outcome over mechanism:** say what must be achieved, not which script or tool must do it.

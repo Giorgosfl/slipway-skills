@@ -22,6 +22,10 @@ The rules live in [`rules/`](rules/), one file per stage. A sub file holds rules
 | `rules/maintain.md` | Bugs, issues and keeping things clean |
 | `rules/working-style.md` | How agents work with the owner |
 
+## Resources
+
+The rules build on seven skills and tools: DOX, ponytail, Matt Pocock's skills, impeccable, Context7, security-audit-skill and i-have-adhd. [`RESOURCES.md`](RESOURCES.md) lists what each one gives a consumer project.
+
 ## Changing the rules
 
 Rules are added, edited and removed one at a time. [`AGENTS.md`](AGENTS.md) holds the checks every rule goes through and how each change is made.
