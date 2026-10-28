@@ -55,3 +55,8 @@
 - **Time limits.**
   - When the owner gives a time limit, finish the asked-for result inside it.
   - Drop side quests, and propose them as follow-ups.
+- **Autopilot.**
+  - "Autopilot" means the owner is away from the computer.
+  - Carry the work through without asking: follow-ups, review rounds until clean, re-tests, commits.
+  - Stay within the Outward actions rule.
+  - Leave for the owner only what needs a decision.
