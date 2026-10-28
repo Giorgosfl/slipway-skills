@@ -14,3 +14,13 @@
   - A commit without a recorded check counts as unverified.
   - Example: "Fix sort order" ends with "Checked: sort tests, 4 passed".
   - Check it: every feature or fix commit names the test it ran.
+- **Plain-language test cases.**
+  - Keep the app's test cases in the repo, so they grow with the app.
+  - Each case has steps, an expected result and the screens to check.
+  - Steps say what a user does; Expected says what a user sees.
+  - For a server or API, the user is the client: steps are requests, Expected is the response.
+  - Use only words a user knows: leave out element IDs, coordinates and tool commands.
+  - Then any agent or person can run the cases, with any tool.
+  - Each change adds, updates or removes the cases its behavior touches.
+  - Example: "Import a CBZ file. Expected: the series appears in the Library with its cover."
+  - Check it: someone who never saw the code can run every case.
