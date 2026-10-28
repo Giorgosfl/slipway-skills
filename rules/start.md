@@ -12,3 +12,6 @@
   - At the start: what landed since the last session, and the open bugs.
   - At the end: what this session did, and what it left open.
   - Both list leftovers: worktrees, branches, and test devices or processes still running.
+- **Own worktree.**
+  - Every session works in its own worktree.
+  - Prepare it before working, so checks and builds run in it.
