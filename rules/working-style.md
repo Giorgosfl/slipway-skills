@@ -33,3 +33,8 @@
   - Give each a few short options, with your recommendation first.
   - Make every recommendation one you'd stand behind: the owner often just accepts it.
   - Keep questions out of long text rounds, where they get lost.
+- **Only the needed work.**
+  - Do only the work the asked-for result needs.
+  - Do exactly the action the owner names: "stage" means stage, not commit.
+  - When the owner questions a step and it isn't needed, drop it.
+  - Propose extra work as a follow-up instead of doing it.
