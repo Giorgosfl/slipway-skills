@@ -44,6 +44,7 @@
   - Background tasks are stopped, and test devices shut down.
   - Issues are updated.
   - The memory file gets anything learned in the session.
+  - Then give the end-of-session status (see Session status), listing anything left behind.
 - **Very short replies.**
   - A status reply is at most 3–4 lines.
   - It says what changed since the last message, without repeating earlier work.
