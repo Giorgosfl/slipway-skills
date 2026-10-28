@@ -36,3 +36,7 @@
   - Use the schema instead of scattered type checks.
   - Read stored data leniently: a bad field falls back to its default on its own.
   - Read API and IPC input strictly: a bad field rejects the whole call.
+- **Constants.**
+  - User-facing text, limits, storage keys and routes each live in their own constants file.
+  - A user-facing string or number written inline in the code is a bug.
+  - Developer log messages stay inline.
