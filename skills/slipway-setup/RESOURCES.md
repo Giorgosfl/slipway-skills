@@ -1,6 +1,6 @@
 # Resources slipway-setup checks
 
-Commands are today's; step 4 of the skill confirms each against the resource's own install doc before running it. Skill folders: Claude Code reads `~/.claude/skills` and the project's `.claude/skills`; Codex reads `~/.codex/skills`, `~/.agents/skills` and the project's `.agents/skills`.
+Commands are today's; step 4 of the skill confirms each against the resource's own install doc before running it. Skill folders: Claude Code reads `~/.claude/skills` (or `$CLAUDE_CONFIG_DIR/skills` when that's set) and the project's `.claude/skills`; Codex reads `$CODEX_HOME/skills` (by default `~/.codex/skills`), `~/.agents/skills`, and the project's `.agents/skills` and `.codex/skills`.
 
 ## DOX
 
@@ -32,14 +32,14 @@ Commands are today's; step 4 of the skill confirms each against the resource's o
 - Gives: the UI critique and audit, and the `DESIGN.md` design doc.
 - Source: https://github.com/pbakaus/impeccable (Apache 2.0). Install doc: its README → Installation.
 - Found when: `impeccable` is an installed plugin, or an `impeccable` folder is in one of the app's skill folders.
-- Install, both apps: `npx impeccable install --providers=claude --scope=global` (Claude Code) or `--providers=codex` (Codex). Record every path the snapshot shows it created. In Codex, the owner then approves its hook in `/hooks`.
+- Install, both apps: `npx impeccable install --providers=claude --scope=global` (Claude Code) or `--providers=codex` (Codex). It also adds its hooks: with `--scope=global` for Claude Code it merges them into `${CLAUDE_CONFIG_DIR:-~/.claude}/settings.json`; for a project install, into `.claude/settings.local.json` or `.codex/hooks.json`, plus `.impeccable/`. Record a created file as `files` and a changed one as `edited`. In Codex, the owner then approves its hook in `/hooks`.
 
 ## Context7
 
 - Gives: current docs for any library, so stack reviews check today's best practice.
 - Source: https://github.com/upstash/context7 (MIT). Install doc: its README → Installation.
 - Found when: an MCP server named `context7` is listed by `claude mcp list` or `codex mcp list`, or the `ctx7` CLI runs and a docs skill that uses it is installed.
-- Install, Claude Code: `npx ctx7 setup --claude`; it signs in and installs a skill. Record `undo: "npx ctx7 remove"`.
+- Install, Claude Code: `npx ctx7 setup --claude --cli`; it signs in, installs a skill and writes a rule file into `${CLAUDE_CONFIG_DIR:-~/.claude}/rules/`. Record `undo: "npx ctx7 remove --claude --cli -y"`.
 - Install, Codex: add the MCP server `https://mcp.context7.com/mcp` with `codex mcp add`, as Context7's client docs describe. Record it as an `mcp` change.
 
 ## security-audit-skill
@@ -47,7 +47,7 @@ Commands are today's; step 4 of the skill confirms each against the resource's o
 - Gives: the security review, a focused review of a change or a full audit when asked.
 - Source: https://github.com/cloudflare/security-audit-skill (MIT). Install doc: its README → Installation.
 - Found when: a `security-audit` folder is in one of the app's skill folders.
-- Install, both apps: `npx skills add https://github.com/cloudflare/security-audit-skill --skill security-audit --global`, choosing the running app when it asks. Record `undo: "npx skills remove security-audit"`.
+- Install, both apps: `npx skills add https://github.com/cloudflare/security-audit-skill --skill security-audit --global --agent claude-code -y`, or `--agent codex` in Codex. Record `undo: "npx skills remove security-audit --global --agent claude-code -y"`, with the same `--agent` as the install.
 
 ## i-have-adhd
 
