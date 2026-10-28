@@ -42,3 +42,12 @@
   - Evidence is what was seen, such as a screenshot, and what was checked, such as a value or a state.
   - A failing case sends the work back to fixing and review.
   - Check it: every case in the report has a verdict and its evidence.
+- **Private data stays private.**
+  - Test runs use invented sample data, never the owner's real data.
+  - The sample data gets its own build or data folder, so a run can't touch the real data.
+  - Use real data only when the owner chooses it and is present.
+  - Capture only the app's own window, never the whole screen.
+  - Delete each capture once it has served as evidence.
+  - Keep real data and secrets out of commits, issues, logs and screenshots.
+  - Example: a desktop app has a "Sample" edition with invented titles and its own data folder.
+  - Check it: no capture or commit from a run shows anything but sample data.
