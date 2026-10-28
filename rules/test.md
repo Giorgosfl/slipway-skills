@@ -24,3 +24,14 @@
   - Each change adds, updates or removes the cases its behavior touches.
   - Example: "Import a CBZ file. Expected: the series appears in the Library with its cover."
   - Check it: someone who never saw the code can run every case.
+- **Test on the real platform.**
+  - Run the test cases where the app really runs, the way its users run it.
+  - Mobile app: on its simulator or a device.
+  - Desktop app: its installed build, driven the way a user would.
+  - Browser extension: installed in the browser it targets.
+  - CLI: in a terminal.
+  - Server or API: a running instance, through its real interface.
+  - Website: in a browser.
+  - A preview or dev page of a device app helps development but never counts as test evidence.
+  - Example: a React Native screen passes in the iOS Simulator, not in a web preview.
+  - Check it: each test report names the platform and build it ran on.
