@@ -40,3 +40,7 @@
   - User-facing text, limits, storage keys and routes each live in their own constants file.
   - A user-facing string or number written inline in the code is a bug.
   - Developer log messages stay inline.
+- **Comments.**
+  - Write a comment only for an outside constraint the code can't show.
+  - Such as a platform gap, an OS rule, a browser quirk or a security invariant.
+  - Design reasoning goes in the agent instruction files, not in code comments.
