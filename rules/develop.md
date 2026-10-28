@@ -63,3 +63,8 @@
   - After each chunk, report what now works and what's next.
 - **One commit per verified step.**
   - Commit each feature, fix or test checkpoint separately, once it is verified.
+- **Check before done.**
+  - Run the project's checks before calling any change done: format, lint, typecheck and the rest.
+  - Fix what a check reports; silence a check only with a stated reason.
+  - Keep git hooks on.
+  - Skip a hook only for a deliberate reason, stated in the commit message.
