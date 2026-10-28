@@ -91,3 +91,7 @@
   - Name each test after the user-visible behavior it protects.
   - Example: "newest-first puts the latest-added series on top", not "sort test 2".
   - Check it: the suite passes offline, in any order.
+- **Small findings get fixed.**
+  - A runner's small finding that isn't a failure still gets filed as an issue.
+  - Fix it in the same round, rather than leaving it as a note.
+  - Example: a label slightly off its baseline is filed and fixed with the round's other fixes.
