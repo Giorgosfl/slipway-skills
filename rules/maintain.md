@@ -22,3 +22,8 @@
 - **Bugs first.**
   - Fix every open bug before running a full test round.
   - Why: a full round over known bugs only finds them again.
+- **Dogfood findings are filed, not fixed.**
+  - Problems the owner finds while using the app day to day are filed as issues, not fixed on the spot.
+  - Each issue has steps, expected, actual and the build number.
+  - Each names the matching test case in its "Done when".
+  - Why: the fixes then go through review and test like any other change.
