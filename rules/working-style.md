@@ -44,3 +44,8 @@
   - Background tasks are stopped, and test devices shut down.
   - Issues are updated.
   - The memory file gets anything learned in the session.
+- **Very short replies.**
+  - A status reply is at most 3–4 lines.
+  - It says what changed since the last message, without repeating earlier work.
+  - It ends with one next step.
+  - Give details only when the owner asks.
