@@ -12,3 +12,10 @@
   - Check each place on the list before calling the bug fixed.
   - File a follow-up issue only for a place you checked and could not fix in this change.
   - Example: a list cut off at the bottom gets fixed on every list, in portrait and landscape, with and without the tab bar.
+- **Continuous loop.**
+  - When the owner asks for the loop, repeat: find problems, file them, fix, review, test, merge.
+  - Problems come from owner reports and full test runs.
+  - File each problem as its own issue.
+  - Fix in batches, one commit per issue.
+  - Stop when no bug is open and every runnable case passes.
+  - Design questions and release work wait for the owner.
