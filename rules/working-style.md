@@ -28,3 +28,8 @@
   - It merges the builders' branches into one integration branch.
   - It tests and reviews that branch as a whole.
   - Before moving main forward, it merges main into the branch, in case another session merged meanwhile.
+- **Asking the owner.**
+  - Ask open questions through an interactive prompt, up to 4 at a time.
+  - Give each a few short options, with your recommendation first.
+  - Make every recommendation one you'd stand behind: the owner often just accepts it.
+  - Keep questions out of long text rounds, where they get lost.
