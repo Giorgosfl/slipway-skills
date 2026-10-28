@@ -44,3 +44,7 @@
   - Write a comment only for an outside constraint the code can't show.
   - Such as a platform gap, an OS rule, a browser quirk or a security invariant.
   - Design reasoning goes in the agent instruction files, not in code comments.
+- **Direct code.**
+  - Build for the uses the code has today, not ones it might have later.
+  - Add an abstraction or a layer only when a current use needs it.
+  - Hard-to-change choices, like data formats and public APIs, get design up front.
