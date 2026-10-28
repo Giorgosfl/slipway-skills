@@ -22,3 +22,9 @@
 - **Agent does what it can.**
   - Do everything an agent can do itself, within the outward-actions rule.
   - Collect what needs the owner, such as a real-device check, for their next hands-on test.
+- **Orchestrating builders.**
+  - The session that hands out work stays quiet while builders run.
+  - It speaks to the owner only when the work is done or blocked.
+  - It merges the builders' branches into one integration branch.
+  - It tests and reviews that branch as a whole.
+  - Before moving main forward, it merges main into the branch, in case another session merged meanwhile.
