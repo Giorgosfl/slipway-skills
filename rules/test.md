@@ -59,3 +59,11 @@
   - The plain-language case stays the source of truth, and the script follows it.
   - Example: "the series shows 12 chapters" is scripted; "the cover isn't cropped" goes to an AI runner.
   - Check it: each case an AI runner ran has an Expected no script could read.
+- **Every bug gets a case.**
+  - Every bug found gets a test case that would have caught it.
+  - Write the case when the issue is filed, not after the fix.
+  - It is a new case, or a tighter Expected in an existing one.
+  - Name the case in the issue's "Done when".
+  - The bug is fixed when that case passes.
+  - Example: "cover missing after import" adds "Expected: the cover shows in the Library" to the import case.
+  - Check it: every bug issue names a case, and that case fails before the fix.
