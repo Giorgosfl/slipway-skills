@@ -7,7 +7,7 @@
   - Design: stress-test the decisions behind the change.
   - Stack: one reviewer per technology, checked against its current docs.
   - Security: a focused review of the change.
-  - Tests: every behavior change has a test that fails when it breaks, and the full suite passes.
+  - Tests: every behavior change has a test that fails when it breaks, and the cases Case sets requires pass.
   - UI: a design critique and audit, skipped only when no UI changed.
   - Today these run as: `ponytail`, `grilling`, `ctx7` docs, `security-audit`, `impeccable`.
   - Check it: every reviewer has reported before the merge.
@@ -19,7 +19,7 @@
   - Fix wording and style findings when they're cheap; they don't call for another round.
   - If round 4 still finds defects, stop and ask the owner: the change likely needs a decision.
   - Finish the rounds before merging, even when the work runs long.
-  - Cut the rounds short only when the owner says so, or for a commit that only brings main into a reviewed branch: Tests and Design, on the merged result.
+  - Cut the rounds short only when the owner says so, or for a commit that only brings main into a reviewed branch, with no conflict resolved by hand: Tests and Design, on the merged result.
 - **Close every finding.**
   - Fix every review finding, or record why it stands.
   - Fix clear defects in the same change.

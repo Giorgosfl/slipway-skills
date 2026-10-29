@@ -4,12 +4,14 @@
   - Commit on a feature branch, not straight on main.
 - **Outward actions.**
   - Ask before any outward action the owner didn't name: push, merge, open issues, post comments.
-  - One exception: when reviews are clean and every case passes, merge, push and clean up without asking.
+  - One exception: when reviews are clean and every required case passes, merge, push and clean up without asking.
   - A merge or push the owner names still waits for clean reviews, unless the owner says to skip them.
   - Ask only when something is left to decide or fix.
 - **Merge on green.**
-  - Merge a feature branch into main only after the full test suite passes on its latest commit.
-  - If main has moved, bring it into the branch first and run the suite again.
+  - Merge a feature branch into main only after the required cases pass on its latest commit.
+  - Case sets in test.md says which cases are required.
+  - If main has moved, bring it into the branch first.
+  - Then choose the required cases again, from the branch's diff against the updated main, and run them.
   - Then fast-forward main and push.
 - **Clean up after merge.**
   - A merge is done only when nothing of the branch is left.

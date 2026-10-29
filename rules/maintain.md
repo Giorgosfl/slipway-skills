@@ -14,14 +14,14 @@
   - Example: a list cut off at the bottom gets fixed on every list, in portrait and landscape, with and without the tab bar.
 - **Continuous loop.**
   - When the owner asks for the loop, repeat: find problems, file them, fix, review, test, merge.
-  - Problems come from owner reports and full test runs.
+  - Problems come from owner reports and runs of every test case.
   - File each problem as its own issue.
   - Fix in batches, one commit per issue.
   - Stop when no bug is open and every runnable case passes.
   - Design questions and release work wait for the owner.
 - **Bugs first.**
-  - Fix every open bug before running a full test round.
-  - Why: a full round over known bugs only finds them again.
+  - Fix every open bug before a run of every test case.
+  - Why: running every case over known bugs only finds them again.
 - **Dogfood findings are filed, not fixed.**
   - Problems the owner finds while using the app day to day are filed as issues, not fixed on the spot.
   - Each issue has steps, expected, actual and the build number.

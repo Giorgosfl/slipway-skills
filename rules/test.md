@@ -71,12 +71,20 @@
   - Example: "cover missing after import" adds "Expected: the cover shows in the Library" to the import case.
   - Check it: every bug issue names a case, and that case fails before the fix.
 - **Case sets.**
-  - Tag each test case as core, a daily path, or full, an edge case.
-  - Before a merge, run every core case, plus every case the change adds or alters.
-  - Before a release, run the whole suite.
-  - Run it against the exact build being shipped.
-  - Example: a sort change runs the core cases and the sort cases; release 1.2 runs every case on the 1.2 build.
-  - Check it: each run report says which set ran, on which build.
+  - Before a merge, the required cases pass: the whole automated suite, plus a chosen set of plain-language cases.
+  - The automated suite always runs in full, since it's cheap; scripted cases count as part of it.
+  - Plain-language cases cost a real run, so a merge runs only a chosen set of them.
+  - Mark the core cases, the app's daily paths, in the case files.
+  - A merge runs every core case.
+  - A merge also runs the cases the change can affect, directly or through shared code, and the ones it adds or alters.
+  - A risky change runs every case: dependencies, build or config, permissions, or stored data.
+  - So does a change to startup and the main screen, or a server's entry point and routing.
+  - When unsure whether a case is affected, run it.
+  - Before a release, run every case against the exact build being shipped.
+  - Example: a change to the shared date formatter runs the core cases, the sort cases and every case that shows a date.
+  - Check it: a merge's test report gives the suite result and the tested commit.
+  - The merge's test report names the risky change kinds touched, or "none", and the shared code touched.
+  - The merge's test report lists the cases run, each with why, and every core case is among them.
 - **Verdicts.**
   - Each case gets one verdict: pass, fail or needs-human.
   - Each verdict has a one-line reason.
@@ -84,7 +92,7 @@
   - A case the runner can't run, such as one needing a real device, is reported as not run, never skipped silently.
   - Those cases run later as manual steps, with the owner.
   - Example: "needs-human: the page edge looks clipped on iPad; can't tell if that's the design."
-  - Check it: the report covers every case in the set, each with a verdict or "not run".
+  - Check it: the report covers every case Case sets chose, each with a verdict or "not run".
 - **Test code.**
   - Pure logic gets behavior tests: inputs in, expected outputs out.
   - A test that searches the source checks only wiring whose breakage would be silent, never comments, copy or whitespace.

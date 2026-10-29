@@ -384,8 +384,8 @@ case $kind in
     agent="slipway, Review report: the reviews were skipped for this push or merge, so the owner is asked to confirm."
     [ "$(slipway_host)" = codex ] && agent="slipway, Review report: the reviews were skipped for this push or merge, and Codex can't ask the owner to confirm, so it is refused. The owner can run it themself." ;;
   push)
-    owner="slipway: this pushes, merges or deletes a branch on the remote. Allow it if you asked for it, or if reviews are clean and every case passes."
-    agent="slipway, Outward actions: this pushes, merges or deletes a branch on the remote. Run it only when the owner asked for it, or when reviews are clean and every case passes; then put SLIPWAY_OK=1 in front of the command." ;;
+    owner="slipway: this pushes, merges or deletes a branch on the remote. Allow it if you asked for it, or if reviews are clean and every required case passes."
+    agent="slipway, Outward actions: this pushes, merges or deletes a branch on the remote. Run it only when the owner asked for it, or when reviews are clean and every required case passes; then put SLIPWAY_OK=1 in front of the command." ;;
   owner)
     owner="slipway: this acts on GitHub (an issue, comment, pull request, release or setting). Allow it only if you asked for it."
     agent="slipway, Outward actions: this acts on GitHub (an issue, comment, pull request, release or setting). Run it only when the owner asked for this action; then put SLIPWAY_OK=1 in front of the command." ;;
@@ -393,8 +393,8 @@ case $kind in
     owner="slipway: this rewrites history, or deletes or exposes something on GitHub. Allow it only if you asked for exactly this."
     agent="slipway, Outward actions: this rewrites history, or deletes or exposes something on GitHub. Run it only when the owner asked for exactly this; then put SLIPWAY_OK=1 in front of the command." ;;
   pushnoverify)
-    owner="slipway: this pushes to the remote and skips git hooks. Allow it only if you asked for it, or reviews are clean and every case passes, and you know why the hook is skipped."
-    agent="slipway, Outward actions and Check before done: this pushes to the remote and skips git hooks. Run it only when the owner asked for it, or when reviews are clean and every case passes, and only for a deliberate reason you tell the owner; then put SLIPWAY_OK=1 in front of the command." ;;
+    owner="slipway: this pushes to the remote and skips git hooks. Allow it only if you asked for it, or reviews are clean and every required case passes, and you know why the hook is skipped."
+    agent="slipway, Outward actions and Check before done: this pushes to the remote and skips git hooks. Run it only when the owner asked for it, or when reviews are clean and every required case passes, and only for a deliberate reason you tell the owner; then put SLIPWAY_OK=1 in front of the command." ;;
   noverify)
     owner="slipway: this skips git hooks. Allow it only for a deliberate, stated reason."
     agent="slipway, Check before done: keep git hooks on. Skip one only for a deliberate reason, stated in the commit message (for a push, tell the owner); then put SLIPWAY_OK=1 in front of the command." ;;

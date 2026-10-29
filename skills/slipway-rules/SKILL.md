@@ -29,5 +29,5 @@ Sub files apply only to one kind of project:
 - `working-style.md` applies in every stage.
 - A rule that names another rule, such as "the Outward actions rule", means that rule in its own file; read it there.
 - Rules that build on another skill name it on a "Today…" line; `slipway-setup` installs those skills.
-- A slipway hook pauses outward git and GitHub commands. Put `SLIPWAY_OK=1` in front of one only when the rules allow it: the owner asked for it; or, for a push, merge or branch clean-up, reviews are clean and every case passes; or, for a skipped git hook, a deliberate reason is stated in the commit message.
+- A slipway hook pauses outward git and GitHub commands. Put `SLIPWAY_OK=1` in front of one only when the rules allow it: the owner asked for it; or, for a push, merge or branch clean-up, reviews are clean and every required case passes; or, for a skipped git hook, a deliberate reason is stated in the commit message.
 - Check it: before calling a stage done, every rule in its file was followed, or the owner was told which one wasn't and why.
