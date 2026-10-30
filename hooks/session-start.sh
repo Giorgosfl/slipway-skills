@@ -14,8 +14,10 @@ new=1
 case $source in resume | compact) new=0 ;; esac
 
 
-echo "slipway rules apply in this project. They live in $root/rules: one file per stage (start, develop, test, review, ship, maintain, working-style), plus sub files such as develop.ui.md that apply only to one kind of project. Before work in a stage, read that stage's file and follow it; the slipway-rules skill says which file fits the task."
+echo "slipway rules apply in this project. They live in $root/rules: one file per stage (start, develop, test, review, ship, maintain, working-style), plus sub files such as develop.ui.md that apply only to one kind of project."
+echo "Each time the stage changes, use the slipway-rules skill to pick that stage's file, then read the whole file and follow every rule in it; a search of the files doesn't count."
 echo "A slipway hook pauses outward git and GitHub commands. Put SLIPWAY_OK=1 in front of one only when the rules allow it: the owner asked for it; or, for a push, merge or branch clean-up, reviews are clean and every case passes; or, for a skipped git hook, a deliberate reason is stated in the commit message."
+echo "A push or merge, even one the owner named, also waits for the reviewers in review.md and their saved report (Review report)."
 # Remember the repo's state at session start, so the Stop hook asks only about this session's changes.
 # It runs in the background, after the rules are printed, so a large repo can't delay them.
 if dir=$(slipway_data_dir); then

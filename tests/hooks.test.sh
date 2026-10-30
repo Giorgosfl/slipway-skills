@@ -30,10 +30,14 @@ for key in sys.argv[1].split("."):
 print(value)' "$1"
 }
 
+# The guard reads the published commit in the session's folder: a repo with one commit.
+grepo="$work/guard-repo"
+git init -q -b main "$grepo" && git -C "$grepo" -c user.name=t -c user.email=t@t commit -q --allow-empty -m init
+
 # run_guard <env> <command>: the guard's raw output for a Bash call.
 run_guard() {
   python3 -c 'import json, sys
-print(json.dumps({"session_id": "s1", "tool_name": "Bash", "tool_input": {"command": sys.argv[1], "description": "Prepare for git push origin"}}))' "$2" |
+print(json.dumps({"session_id": "s1", "cwd": sys.argv[2], "tool_name": "Bash", "tool_input": {"command": sys.argv[1], "description": "Prepare for git push origin"}}))' "$2" "$grepo" |
     env -u PLUGIN_DATA -u CLAUDE_PLUGIN_DATA $1 CLAUDE_PLUGIN_ROOT="$root" sh "$root/hooks/guard.sh"
 }
 
@@ -41,6 +45,8 @@ print(json.dumps({"session_id": "s1", "tool_name": "Bash", "tool_input": {"comma
 kind() {
   case $(run_guard "CLAUDE_PLUGIN_DATA=$work/c" "$1" | field hookSpecificOutput.permissionDecisionReason) in
     "(empty)") echo none ;;
+    "slipway: no clean review report"*) echo review ;;
+    "slipway: this pushes or merges"*) echo waived ;;
     "slipway: this pushes to the remote and skips"*) echo pushnoverify ;;
     "slipway: this pushes"*) echo push ;;
     "slipway: this acts on GitHub"*) echo owner ;;
@@ -86,8 +92,8 @@ expect none \
   'grep -rn -- --no-verify .' 'echo "git push later"' 'git push-helper' 'gh issue list' 'gh pr view 3' \
   'gh api repos/o/r/pulls' 'gh api -X GET repos/o/r' 'git commit -m "skip --no-verify docs"' 'git merge feature' \
   'git push --dry-run' 'git push -n origin main' 'gh api graphql -f query="query { viewer { login } }"' \
-  'SLIPWAY_OK=1 git push origin main' 'SLIPWAY_OK=1 gh pr merge 3' 'SLIPWAY_OK=1 git push --force' \
-  'env SLIPWAY_OK=1 git push' 'npm test' '# Don'"'"'t push yet
+  'SLIPWAY_OK=1 git push origin --delete old' 'SLIPWAY_OK=1 git push origin :old :older' \
+  'SLIPWAY_OK=1 gh issue create -t x' 'SLIPWAY_OK=1 git commit --no-verify -m x' 'SLIPWAY_OK=1 bash -c "ls"' 'npm test' '# Don'"'"'t push yet
 ls' 'cat > notes.md <<EOF
 git push origin main
 gh pr create
@@ -124,12 +130,56 @@ text
 EOF
 git push'
 
+# A marked push or merge waits for a clean review report saved for the commit it publishes.
+git -C "$grepo" checkout -q -b feat && git -C "$grepo" -c user.name=t -c user.email=t@t commit -q --allow-empty -m feat
+git -C "$grepo" checkout -q -
+reports="$(git -C "$grepo" rev-parse --path-format=absolute --git-common-dir)/slipway/reviews"
+greport="$reports/$(git -C "$grepo" rev-parse HEAD).md"
+freport="$reports/$(git -C "$grepo" rev-parse feat).md"
+mkdir -p "$reports"
+expect review 'SLIPWAY_OK=1 git push origin main' 'SLIPWAY_OK=1 gh pr merge 3' 'env SLIPWAY_OK=1 git push' \
+  'SLIPWAY_OK=1 git push --no-verify' 'SLIPWAY_OK=1 HUSKY=0 git push' 'SLIPWAY_OK=1 git push -f origin main' \
+  'SLIPWAY_OK=1 git push --force-with-lease origin feat' 'SLIPWAY_OK=1 git push origin main :old' \
+  'SLIPWAY_OK=1 sh -c "git push"' 'SLIPWAY_OK=1 bash -c "git push origin main"' 'SLIPWAY_OK=1 git subtree push --prefix d origin p'
+expect push 'SLIPWAY_NO_REVIEW=1 git push'
+expect waived 'SLIPWAY_OK=1 SLIPWAY_NO_REVIEW=1 git push origin main' 'SLIPWAY_NO_REVIEW=1 SLIPWAY_OK=1 gh pr merge 3' \
+  'env SLIPWAY_OK=1 SLIPWAY_NO_REVIEW=1 git push' 'SLIPWAY_OK=1 SLIPWAY_NO_REVIEW=1 sh -c "git push"'
+printf '| Reviewer | Result | Note |\n|---|---|---|\n| Tests | ❌ 1 | no test |\n' >"$greport"
+expect review 'SLIPWAY_OK=1 git push origin main'
+printf '| Reviewer | Result | Note |\n|---|---|---|\n' >"$greport"
+expect review 'SLIPWAY_OK=1 git push origin main'
+printf '| Reviewer | Result | Note |\n|---|---|---|\n| Tests | ➖ | skipped |\n| UI | ➖ | no UI changed |\n' >"$greport"
+expect review 'SLIPWAY_OK=1 git push origin main'
+printf '| Reviewer | Result | Note |\n|---|---|---|\n| Tests | ✅ | was ❌ 2, both fixed |\n| UI | ➖ | no UI changed |\n' >"$greport"
+expect none 'SLIPWAY_OK=1 git push' 'SLIPWAY_OK=1 git push origin HEAD' 'SLIPWAY_OK=1 git push -f origin HEAD:main'
+expect review 'SLIPWAY_OK=1 git push origin feat' 'SLIPWAY_OK=1 gh pr merge 3' 'SLIPWAY_OK=1 git push origin no-such-branch'
+# HEAD (main) is reviewed and feat isn't: each shape that could publish something else asks.
+expect review 'git commit -qam x && SLIPWAY_OK=1 git push' 'git checkout feat && SLIPWAY_OK=1 git push' \
+  'cd ../wt && SLIPWAY_OK=1 git push origin HEAD' 'SLIPWAY_OK=1 git -C ../wt push' 'SLIPWAY_OK=1 git push origin main feat' \
+  'SLIPWAY_OK=1 git push origin main && SLIPWAY_OK=1 git push origin feat' 'SLIPWAY_OK=1 git push -o ci.skip origin feat' \
+  'SLIPWAY_OK=1 git push --all' 'SLIPWAY_OK=1 git push --tags origin' 'SLIPWAY_OK=1 git push origin :' \
+  'SLIPWAY_OK=1 git push origin $(git branch --show-current)' 'SLIPWAY_OK=1 sh -c "git push"'
+expect waived 'SLIPWAY_OK=1 git push origin main; SLIPWAY_OK=1 SLIPWAY_NO_REVIEW=1 git push origin feat'
+# gh pr merge: the pull request is the first word that isn't an option or its value, and -R is kept.
+mkdir -p "$work/bin"
+printf '#!/bin/sh\n[ "$*" = "pr view 5 -R o/r --json headRefOid -q .headRefOid" ] && git rev-parse HEAD\n' >"$work/bin/gh"
+chmod +x "$work/bin/gh"
+check "a merge of a reviewed pull request passes" "$(run_guard "CLAUDE_PLUGIN_DATA=$work/c PATH=$work/bin:$PATH" 'SLIPWAY_OK=1 gh -R o/r pr merge --squash -t "a title" 5' | field x)" "(empty)"
+check "and asks when the pull request can't be read" "$(run_guard "CLAUDE_PLUGIN_DATA=$work/c PATH=$work/bin:$PATH" 'SLIPWAY_OK=1 gh pr merge --squash 5' | field hookSpecificOutput.permissionDecision)" "ask"
+expect push 'git push origin main'
+cp "$greport" "$freport"
+expect none 'SLIPWAY_OK=1 git push origin feat' 'SLIPWAY_OK=1 git push -u origin feat:feat'
+check "an unknown commit gets the cannot-tell reason" "$(run_guard "CLAUDE_PLUGIN_DATA=$work/c" 'SLIPWAY_OK=1 git push origin no-such-branch' | field hookSpecificOutput.additionalContext | grep -c "couldn't tell which commit")" "1"
+rm -f "$greport" "$freport"
+check "the review reason names the report file" "$(run_guard "CLAUDE_PLUGIN_DATA=$work/c" 'SLIPWAY_OK=1 git push' | field hookSpecificOutput.additionalContext | grep -c 'slipway/reviews/')" "1"
+check "codex denies an unreviewed marked push" "$(run_guard "PLUGIN_DATA=$work/x" 'SLIPWAY_OK=1 git push' | field hookSpecificOutput.permissionDecision)" "deny"
+
 # What each app gets back.
 check "claude asks" "$(run_guard "CLAUDE_PLUGIN_DATA=$work/c" 'git push' | field hookSpecificOutput.permissionDecision)" "ask"
 check "claude tells the agent about the marker" "$(run_guard "CLAUDE_PLUGIN_DATA=$work/c" 'git push' | field hookSpecificOutput.additionalContext | grep -c SLIPWAY_OK=1)" "1"
 check "codex denies" "$(run_guard "PLUGIN_DATA=$work/x" 'git push' | field hookSpecificOutput.permissionDecision)" "deny"
 check "codex's reason is for the agent" "$(run_guard "PLUGIN_DATA=$work/x" 'git push' | field hookSpecificOutput.permissionDecisionReason | grep -c 'SLIPWAY_OK=1 in front')" "1"
-check "codex passes a marked push" "$(run_guard "PLUGIN_DATA=$work/x" 'SLIPWAY_OK=1 git push' | field x)" "(empty)"
+check "codex refuses a marked push with the reviews waived, as it can't ask" "$(run_guard "PLUGIN_DATA=$work/x" 'SLIPWAY_OK=1 SLIPWAY_NO_REVIEW=1 git push' | field hookSpecificOutput.permissionDecision)" "deny"
 check "codex passes a grep for --no-verify" "$(run_guard "PLUGIN_DATA=$work/x" 'grep -rn -- --no-verify .' | field x)" "(empty)"
 big=$(python3 -c 'print("echo " + "x" * 400000 + " && git push")')
 started=$(date +%s)

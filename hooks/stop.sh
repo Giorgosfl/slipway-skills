@@ -37,7 +37,12 @@ fi
 slipway_write "$last" "$sum"
 : >"$last.asked"
 
-reason="Before you finish, check the slipway rules for what changed in this session: the project's checks ran on it (Check before done); every 'works' points to a test or evidence, and anything untested is named (No untested claims); nothing outward happened beyond what the Outward actions rule allows. If all of that holds, finish as planned."
+reason="Before you finish, check the slipway rules for what changed in this session:"
+reason="$reason the project's checks ran on it (Check before done);"
+reason="$reason every 'works' points to a test or evidence, and anything untested is named (No untested claims);"
+reason="$reason anything merged or pushed was reviewed first, even when the owner named it, and the owner saw the table (Review report);"
+reason="$reason nothing outward happened beyond what the Outward actions rule allows."
+reason="$reason If all of it holds, finish as planned."
 
 if [ "$(slipway_host)" = codex ]; then
   printf '{"decision":"block","reason":"%s"}\n' "$reason"

@@ -1,14 +1,17 @@
 #!/bin/sh
-# PreToolUse on Bash: applies the Outward actions and Check before done rules.
+# PreToolUse on Bash: applies the Outward actions, Review report and Check before done rules.
 # Claude Code asks the owner. Codex rejects "ask" and runs the tool anyway, so there the guard denies.
-# Either way, a command the rules allow runs when it starts with SLIPWAY_OK=1.
+# Either way, a command the rules allow runs when it starts with SLIPWAY_OK=1; a push or merge also
+# needs a clean review report saved for each commit it publishes, and passes only as one plain command.
+# With SLIPWAY_NO_REVIEW=1, Claude Code confirms with the owner and Codex refuses.
 
 . "$(dirname "$0")/lib.sh"
 
 input=$(cat)
 case $input in *git* | *gh*) ;; *) exit 0 ;; esac
+slipway_cd "$input"
 
-kind=$(printf '%s' "$input" | awk '
+out=$(printf '%s' "$input" | awk '
 # Decode the "command" string from the hook JSON.
 function command_of(json,    pos, rest, out, c) {
   if (!match(json, /"command"[ \t\r\n]*:[ \t\r\n]*"/)) return ""
@@ -145,8 +148,16 @@ function closing(line, i,    d, j, c, n, k, m, delim, ln) {
   return n
 }
 
-function rank(k) { return k == "force" ? 5 : k == "owner" ? 4 : k == "pushnoverify" ? 3 : k == "noverify" ? 2 : k == "push" ? 1 : 0 }
-function flag(k) { if (rank(k) > rank(found)) found = k }
+function rank(k) { return k == "force" ? 7 : k == "owner" ? 6 : k == "pushnoverify" ? 5 : k == "noverify" ? 4 : k == "push" ? 3 : k == "waived" ? 2 : k == "review" ? 1 : 0 }
+# A command marked SLIPWAY_OK=1 passes, except one that publishes commits (a push or merge that is not only
+# a branch delete): that becomes "review", or "waived" with SLIPWAY_NO_REVIEW=1, and the shell below decides.
+function flag(k) {
+  if (cur_ok) {
+    if (!cur_push || cur_delete) return
+    k = cur_waive ? "waived" : "review"
+  }
+  if (rank(k) > rank(found)) { found = k; target = cur_target; plain = cur_plain }
+}
 function short_has(w, letters) { return w ~ /^-[A-Za-z]+$/ && w ~ letters }
 
 # Whether a gh api graphql field could carry a mutation: one the guard cannot read
@@ -159,13 +170,14 @@ function writes(field,    v) {
 }
 
 # Look at one simple command held in words[1..nw].
-function check(depth,    envskip, i, ok, w, cmd, j, s, a, group, act, method, fields, graphql, mutation, hooksoff, k, dry) {
+function check(depth,    envskip, i, ok, waive, w, cmd, pos, save_ok, save_waive, j, s, a, group, act, method, fields, graphql, mutation, hooksoff, k, dry) {
   if (nw == 0) return
-  i = 1; ok = 0; envskip = 0
+  i = 1; ok = inh_ok; waive = inh_waive; envskip = 0
   while (i <= nw) {
     w = words[i]
     if (w ~ /^[A-Za-z_][A-Za-z0-9_]*=/) {
       if (w == "SLIPWAY_OK=1") ok = 1
+      if (w == "SLIPWAY_NO_REVIEW=1") waive = 1
       if (w ~ /^(HUSKY=0|LEFTHOOK=0|SKIP=.+)$/) envskip = 1
       i++; continue
     }
@@ -175,6 +187,7 @@ function check(depth,    envskip, i, ok, w, cmd, j, s, a, group, act, method, fi
       i++
       while (i <= nw && (words[i] ~ /^-/ || words[i] ~ /^[A-Za-z_][A-Za-z0-9_]*=/)) {
         if (words[i] == "SLIPWAY_OK=1") ok = 1
+        if (words[i] == "SLIPWAY_NO_REVIEW=1") waive = 1
         i += words[i] ~ /^-[uCS]$/ ? 2 : 1
       }
       continue
@@ -186,32 +199,50 @@ function check(depth,    envskip, i, ok, w, cmd, j, s, a, group, act, method, fi
     if (w == "watch") { i++; while (i <= nw && words[i] ~ /^-/) i += words[i] ~ /^-[nd]$/ ? 2 : 1; continue }
     break
   }
-  if (i > nw || ok) return
+  if (i > nw) return
+  ncmd++
   cmd = words[i]; sub(/.*\//, "", cmd)
+  cur_ok = ok; cur_waive = waive; cur_push = 0; cur_delete = 0; cur_target = ""; cur_plain = 1
 
   if (cmd ~ /^(sh|bash|zsh|dash)$/) {
-    for (k = i + 1; k < nw; k++) if (words[k] ~ /^-[A-Za-z]*c[A-Za-z]*$/) { if (depth < 4) { s = words[k + 1]; nw = 0; scan(s, depth + 1) } return }
+    for (k = i + 1; k < nw; k++) if (words[k] ~ /^-[A-Za-z]*c[A-Za-z]*$/) {
+      if (depth < 4) {
+        s = words[k + 1]; nw = 0; save_ok = inh_ok; save_waive = inh_waive; inh_ok = ok; inh_waive = waive
+        scan(s, depth + 1); inh_ok = save_ok; inh_waive = save_waive
+      }
+      return
+    }
     return
   }
 
   if (cmd == "git") {
     j = i + 1; hooksoff = envskip
     while (j <= nw && words[j] ~ /^-/) {
+      cur_plain = 0
       if (words[j] ~ /^(-C|-c|--git-dir|--work-tree|--namespace|--super-prefix|--config-env)$/) {
         if (words[j] == "-c" && words[j + 1] ~ /^core\.hooks[Pp]ath=/) hooksoff = 1
         j += 2
       } else j++
     }
     s = words[j]
-    if (s == "subtree" && words[j + 1] == "push") { flag("push"); return }
+    if (s == "subtree" && words[j + 1] == "push") { cur_push = 1; cur_plain = 0; flag("push"); return }
     if (s == "push") {
-      k = "push"; dry = 0
+      k = "push"; dry = 0; cur_push = 1; pos = 0
       for (a = j + 1; a <= nw; a++) {
         w = words[a]
         if (w == "--dry-run" || short_has(w, "n")) dry = 1
         if (w ~ /^--force/ || w == "--mirror" || w ~ /^\+./ || short_has(w, "f")) k = "force"
+        if (w == "--delete" || short_has(w, "d")) cur_delete = 1
         if (w == "--no-verify") hooksoff = 1
+        # An option that adds refs or takes a value (--all, --tags, -o, --repo) makes the commits unclear.
+        if (w ~ /^-/ && w !~ /^-[ufqvnd]+$/ && w !~ /^--(set-upstream|quiet|verbose|progress|no-progress|force|force-with-lease(=.*)?|force-if-includes|no-verify|verify|atomic|dry-run|delete)$/) cur_plain = 0
+        # After the remote, each refspec that is not a delete names a commit to review; a bare ":" names none.
+        if (w !~ /^-/ && ++pos >= 2) {
+          if (w == ":" || w == "+:") cur_plain = 0
+          else if (w !~ /^:/) { w = substr(w, w ~ /^\+/ ? 2 : 1); sub(/:.*/, "", w); cur_target = cur_target (cur_target == "" ? "" : "\n") w }
+        }
       }
+      if (pos >= 2 && cur_target == "" && cur_plain) cur_delete = 1
       if (hooksoff && k == "push") k = "pushnoverify"
       if (!dry) flag(k)
     } else if (s ~ /^(commit|merge|am|rebase|cherry-pick|revert)$/) {
@@ -226,10 +257,25 @@ function check(depth,    envskip, i, ok, w, cmd, j, s, a, group, act, method, fi
   }
 
   if (cmd == "gh") {
-    j = i + 1
-    while (j <= nw && words[j] ~ /^-/) j += words[j] ~ /^(-R|--repo|--hostname)$/ ? 2 : 1
+    j = i + 1; repo = "-"
+    while (j <= nw && words[j] ~ /^-/) {
+      if (words[j] ~ /^(-R|--repo)$/) { repo = words[j + 1]; j += 2 }
+      else { cur_plain = 0; j += words[j] == "--hostname" ? 2 : 1 }
+    }
     group = words[j]; act = words[j + 1]
-    if ((group == "pr" && act ~ /^(merge|update-branch)$/)) flag("push")
+    if ((group == "pr" && act ~ /^(merge|update-branch)$/)) {
+      # The pull request: the first word after the action that is neither an option nor the value of one.
+      pr = "-"
+      for (a = j + 2; a <= nw; a++) {
+        w = words[a]
+        if (w ~ /^(-R|--repo)$/) { repo = words[++a]; continue }
+        if (w ~ /^(-t|--subject|-b|--body|-F|--body-file|-A|--author-email|--match-head-commit)$/) { a++; continue }
+        if (w ~ /^-/) continue
+        if (pr == "-") pr = w; else cur_plain = 0
+      }
+      cur_push = 1; cur_target = "pr " repo " " pr
+      flag("push")
+    }
     else if ((group == "repo" && act ~ /^(delete|archive|rename)$/) ||
         (group == "release" && act == "delete") ||
         (group == "issue" && act ~ /^(delete|transfer)$/)) flag("force")
@@ -268,10 +314,75 @@ function check(depth,    envskip, i, ok, w, cmd, j, s, a, group, act, method, fi
 }
 
 { json = json $0 "\n" }
-END { found = ""; scan(command_of(json), 0); print found }
+# A marked push or merge passes only as the one command in the line: an earlier cd, commit or checkout
+# would change what it publishes after the guard has looked.
+END {
+  found = ""; target = ""; plain = 0; ncmd = 0
+  scan(command_of(json), 0)
+  if (ncmd > 1) plain = 0
+  print found; print plain; print target
+}
 ')
 
+{
+  read -r kind
+  read -r plain
+  targets=$(cat)
+} <<EOF
+$out
+EOF
+
+# A clean report: a table whose Result column has at least one ✅ and no ❌ (a ❌ in a Note doesn't count).
+clean_report() {
+  [ -s "$1" ] && awk -F'|' '
+    NF >= 4 { if ($3 ~ /❌/) bad = 1; if ($3 ~ /✅/) good = 1 }
+    END { exit !(good && !bad) }' "$1"
+}
+
+# Each commit a marked push or merge publishes: each pushed ref, the pull request's head, or HEAD.
+# It passes only when every one has a clean report; a commit the guard can't tell makes it ask.
+if [ "$kind" = review ] || [ "$kind" = waived ]; then
+  unknown=0
+  [ "$plain" = 1 ] || unknown=1
+  reports=$(slipway_repo)/slipway/reviews
+  report="" short="" dirty=0
+  while [ "$unknown" = 0 ] && IFS= read -r t; do
+    case $t in
+      "pr "*)
+        set -- $t
+        pr=$3 repo=$2
+        set -- pr view
+        [ "$pr" = - ] || set -- "$@" "$pr"
+        [ "$repo" = - ] || set -- "$@" -R "$repo"
+        commit=$(gh "$@" --json headRefOid -q .headRefOid 2>/dev/null) ;;
+      "") commit=$(git rev-parse --verify -q HEAD 2>/dev/null) ;;
+      *) commit=$(git rev-parse --verify -q "$t^{commit}" 2>/dev/null) ;;
+    esac
+    [ -n "$commit" ] || { unknown=1; break; }
+    clean_report "$reports/$commit.md" && continue
+    dirty=1
+    [ -n "$report" ] && continue
+    report=$reports/$commit.md
+    short=$(printf '%s' "$commit" | cut -c1-7)
+  done <<EOF
+$targets
+EOF
+  [ "$kind" = review ] && [ "$unknown" = 0 ] && [ "$dirty" = 0 ] && exit 0
+fi
+
 case $kind in
+  review)
+    owner="slipway: no clean review report is saved for ${short:-the commit this publishes}, so the reviews may not have run. Allow it only if you said to skip the reviews."
+    if [ "$unknown" = 0 ]; then
+      agent="slipway, Review report: no clean review report is saved for $short, a commit this pushes or merges. Run the reviewers in review.md, show the owner the report table, save it as $report with at least one ✅ and no ❌; then run the command again."
+    else
+      agent="slipway, Review report: the guard couldn't tell which commits this pushes or merges. Run the push or merge on its own, as one plain command from inside the repo: git push [remote] [branch...] or gh pr merge <number>; then save the review report for each commit."
+    fi
+    agent="$agent Only if the owner said to skip the reviews, put SLIPWAY_NO_REVIEW=1 in front as well; the owner is then asked to confirm." ;;
+  waived)
+    owner="slipway: this pushes or merges ${short:-a commit} with the reviews skipped. Allow it only if you said to skip the reviews."
+    agent="slipway, Review report: the reviews were skipped for this push or merge, so the owner is asked to confirm."
+    [ "$(slipway_host)" = codex ] && agent="slipway, Review report: the reviews were skipped for this push or merge, and Codex can't ask the owner to confirm, so it is refused. The owner can run it themself." ;;
   push)
     owner="slipway: this pushes, merges or deletes a branch on the remote. Allow it if you asked for it, or if reviews are clean and every case passes."
     agent="slipway, Outward actions: this pushes, merges or deletes a branch on the remote. Run it only when the owner asked for it, or when reviews are clean and every case passes; then put SLIPWAY_OK=1 in front of the command." ;;
