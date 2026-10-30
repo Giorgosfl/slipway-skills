@@ -19,7 +19,7 @@
   - Fix wording and style findings when they're cheap; they don't call for another round.
   - If round 4 still finds defects, stop and ask the owner: the change likely needs a decision.
   - Finish the rounds before merging, even when the work runs long.
-  - Cut the rounds short only when the owner says so.
+  - Cut the rounds short only when the owner says so, or for a commit that only brings main into a reviewed branch: Tests and Design, on the merged result.
 - **Close every finding.**
   - Fix every review finding, or record why it stands.
   - Fix clear defects in the same change.
@@ -27,6 +27,20 @@
   - That includes test runners' small findings: file them and fix them in the same round.
   - After fixing, re-run each reviewer whose area the fixes touched.
   - Check it: every finding is marked fixed, recorded or filed.
+- **Review report.**
+  - After every review round, show the owner one table, with a row for each reviewer the change calls for.
+  - Columns: Reviewer, Result, Note.
+  - Result: ❌ and the count of findings still open, such as "❌ 3"; ✅ when none is open; ➖ when the reviewer was skipped.
+  - A finding closed under Close every finding is no longer open: the note says how, such as "2 fixed".
+  - A report with no ✅ counts as no report: at least one reviewer ran and passed.
+  - After a short round, the rows it didn't re-run keep their result, noted "unchanged since <commit>".
+  - Note: one line on what the reviewer checked or found; for a skipped reviewer, why.
+  - A missing row means that reviewer didn't run.
+  - Keep one report per change, with each reviewer's latest result.
+  - Save it for each commit being merged or pushed, so anyone can check later that the reviews ran.
+  - Today it's saved as `slipway/reviews/<commit>.md` in the git folder all the repo's worktrees share.
+  - Example: "Security ✅ no input or storage changed"; "Tests ❌ 1 the new button has no test".
+  - Check it: each commit being merged or pushed has a saved report with at least one ✅ and no ❌.
 - **Reviewers only read.**
   - Reviewers read the change; they never edit, commit or switch branches.
   - Reviewers don't start agents of their own.
