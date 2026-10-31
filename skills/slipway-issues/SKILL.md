@@ -12,10 +12,11 @@ Reads the repo's GitHub issues and gives the owner one short overview: what an a
 1. **Check that the repo tracks its work in GitHub issues.** Stop at the first check that fails, and report it as in "Not tracked" below.
    - The folder is a git repo.
    - The repo's issue-tracker doc, when it has one, names GitHub. This comes before the GitHub checks, so a project that tracks its work elsewhere isn't told to set up GitHub.
-   - The repo has a GitHub remote: `git remote -v`. With more than one GitHub repo among the remotes, as in a fork, use the one `gh repo set-default --view` names; when none is set, ask the owner which one.
-   - `gh` is installed and signed in to that remote's host: `gh auth status --active --hostname github.com`.
+     - Today Matt Pocock's skills point to that doc from an `### Issue tracker` block in `AGENTS.md` or `CLAUDE.md`, usually `docs/agents/issue-tracker.md`, with the triage-label map `triage-labels.md` beside it.
+   - The repo has a remote on github.com: `git remote -v`. This skill reads only github.com.
+   - `gh` is installed and signed in: `gh auth status --active --hostname github.com`.
+   - With more than one github.com repo among the remotes, as in a fork, use the one `gh repo set-default --view` names; when none is set, ask the owner which one.
    - The repo can be read and has Issues turned on: `gh repo view <owner>/<name> --json hasIssuesEnabled,defaultBranchRef`.
-   - Today Matt Pocock's skills point to the issue-tracker doc from an `### Issue tracker` block in `AGENTS.md` or `CLAUDE.md`, usually `docs/agents/issue-tracker.md`, with the triage-label map `triage-labels.md` beside it.
 2. **Read the issues** in one query. Write the owner, the name and the date 7 days ago into it literally, on one line, with no `$` variables or shell expansions, so the slipway guard sees a read and lets it through:
 
    ```bash
@@ -25,13 +26,14 @@ Reads the repo's GitHub issues and gives the owner one short overview: what an a
    - While `open` or `recent` has `hasNextPage`, run again with `after: "<endCursor>"` written into that list, keeping only that list in the query.
    - No issues at all, open or closed: stop, and report "No issues yet".
    - Read the repo's triage-label map too, when it has one, so a renamed label still counts for its role.
-3. **Read what's in flight.** Fetch the default branch first, `git fetch <remote> <default>`, with the GitHub remote's name from step 1. Then read the commits on the current branch that aren't on it, subjects and bodies: `git log --format='%h %s%n%b' <remote>/<default>..HEAD`. Note each open issue a commit names as `#N` or clearly works on.
+3. **Read what's in flight.** Fetch the default branch first, `git fetch <remote> <default>`, with the github.com remote's name from step 1. Then read the commits on the current branch that aren't on it, subjects and bodies: `git log --format='%h %s%n%b' <remote>/<default>..HEAD`. Note each open issue a commit says it fixes or works on, such as "Fixes #N", "Part of #N" or a subject about it; a passing mention, such as "still tracked in #N", doesn't count.
+   - If the fetch fails, as offline or in a sandbox that can't write in `.git`, use the local `<remote>/<default>` as it is, and say in the last line that it may be out of date. If that ref doesn't exist either, skip this step and say so in the last line.
 4. **Sort each open issue into one group,** the first that fits:
    1. **Bugs an agent can fix now:** labelled bug and ready-for-agent.
    2. **A map:** sub-issues of the same open parent, or titles in one numbered series such as "Search 2/4". One group per map, named after it. The parent itself is the group's title, not an item.
       - Steps done: the parent's `subIssuesSummary`; for a numbered series, the total from the titles minus the steps still open in any group.
       - An item gets a step number only from a numbered title; sub-issues of a parent are listed in number order.
-      - A bug that belongs to a map stays in the bugs group, marked with its map and step.
+      - A bug that belongs to a map stays in the bugs group, marked with its map and step. When all of a map's open steps are such bugs, keep the map's title line anyway, with one line pointing to them: "its last open step, #52, is under bugs".
       - An open parent whose steps are all closed goes under "Waiting on you": "<map>: all N steps done, ready to close".
    3. **Ready for an agent:** other ready-for-agent issues.
    4. **Waiting on you:** ready-for-human and needs-triage, plus needs-info that the owner filed (its author is the viewer).
@@ -52,9 +54,9 @@ acme-app has **7 open issues** and **41 closed**. 2 can be started now.
 - #52: Search results disappear after you rotate the phone. In flight on this branch.
 - #55: Saving a draft with an empty title crashes the editor
 
-**Offline mode (steps 1 and 2 of 4 are done)**
-- #48, step 3/4: keep edits made offline and send them when back online. Ready for an agent.
-- #49, step 4/4: show which notes haven't synced yet. Needs you (ready-for-human), blocked by #48.
+**Offline mode (2 of 4 steps done)**
+- #48: keep edits made offline and send them when back online. Ready for an agent.
+- #49: show which notes haven't synced yet. Needs you (ready-for-human), blocked by #48.
 
 **Waiting on you**
 - #50: Decisions left from the last test run (needs-triage)
@@ -62,12 +64,12 @@ acme-app has **7 open issues** and **41 closed**. 2 can be started now.
 **No label**
 - #31: Measure start-up time on older phones
 
-**Done recently:** 6 issues closed since Oct 24, including offline mode steps 1 and 2 (#46, #47).
+**Done recently:** 6 issues closed since Oct 24, including two offline mode steps (#46, #47).
 
 The current branch `fix-search` has commits about search results and rotation. I haven't checked whether they already fix #52.
 ```
 
-Here "Offline mode" is the map's open parent issue: it counts among the 7 open issues but shows only as the group's title.
+Here "Offline mode" is the map's open parent issue: it counts among the 7 open issues but shows only as the group's title. Its sub-issues have plain titles, so the items carry no step numbers.
 
 - **First line:** the GitHub repo's name, the open and closed counts in bold, and how many issues can be started now.
 - **Groups:** in the order of step 4, each with a bold title. Leave out an empty group.
@@ -100,7 +102,7 @@ Next: run `gh auth login`, then ask again.
 |---|---|---|
 | Not a git repo | doesn't track | Open the project's folder, or tell me where it tracks its work. |
 | The tracker doc names another tracker | doesn't track | Read the issues there; this skill reads only GitHub. |
-| No GitHub remote | doesn't track | Tell me where this project tracks its work, or create a GitHub repo for it. |
+| No remote on github.com | doesn't track | Tell me where this project tracks its work; this skill reads only github.com. |
 | Issues turned off | doesn't track | Turn on Issues in the repo's GitHub settings. |
 | No issues yet | doesn't track, or "tracks its work in GitHub issues, but none are filed yet" when the tracker doc names GitHub | File the first one; with no tracker doc, set it up first (slipway-setup installs the skills that do it). |
 | `gh` missing or signed out | can't read | Install `gh`, or run `gh auth login`, then ask again. |
