@@ -13,7 +13,9 @@ Reads the repo's GitHub issues and gives the owner one short overview: what an a
    - The folder is a git repo.
    - The repo's issue-tracker doc, when it has one, names GitHub. This comes before the GitHub checks, so a project that tracks its work elsewhere isn't told to set up GitHub.
      - Today Matt Pocock's skills point to that doc from an `### Issue tracker` block in `AGENTS.md` or `CLAUDE.md`, usually `docs/agents/issue-tracker.md`, with the triage-label map `triage-labels.md` beside it.
-   - The repo has a GitHub remote: `git remote -v`. This skill reads only github.com; a remote on another GitHub host, such as GitHub Enterprise, counts as "can't read".
+   - The repo has a remote on github.com: `git remote -v`. This skill reads only github.com. When none is:
+     - No remote at all, or only remotes on well-known other hosts such as gitlab.com, bitbucket.org or dev.azure.com: "No GitHub remote".
+     - A remote on any other host: it may be GitHub Enterprise, so report "No github.com remote, but one on another host".
    - `gh` is installed and signed in: `gh auth status --active --hostname github.com`.
    - With more than one github.com repo among the remotes, as in a fork, use the one `gh repo set-default --view` names; when none is set, ask the owner which one.
    - The repo can be read and has Issues turned on: `gh repo view <owner>/<name> --json hasIssuesEnabled,defaultBranchRef`.
@@ -33,7 +35,7 @@ Reads the repo's GitHub issues and gives the owner one short overview: what an a
    2. **A map:** sub-issues of the same open parent, or titles in one numbered series such as "Search 2/4". One group per map, named after it. The parent itself is the group's title, not an item.
       - Steps done: the parent's `subIssuesSummary`; for a numbered series, the total from the titles minus the steps still open in any group.
       - An item gets a step number only from a numbered title; sub-issues of a parent are listed in number order.
-      - A bug that belongs to a map stays in the bugs group, marked with its map, and its step when it has one. When all of a map's open steps are such bugs, keep the map's title line anyway, with one line pointing to them: "its open steps, #52 and #53, are under bugs".
+      - A bug that belongs to a map stays in the bugs group, marked with its map, and its step when it has one. When all of a map's open steps are such bugs, keep the map's title line anyway, with one line pointing to them: "its open step, #52, is under bugs", or "its open steps, #52 and #53, are under bugs".
       - An open parent whose steps are all closed goes under "Waiting on you": "<map>: all N steps done, ready to close".
    3. **Ready for an agent:** other ready-for-agent issues.
    4. **Waiting on you:** ready-for-human and needs-triage, plus needs-info that the owner filed (its author is the viewer).
@@ -43,7 +45,7 @@ Reads the repo's GitHub issues and gives the owner one short overview: what an a
    - "Can be started now" counts only ready-for-agent issues that are none of these.
 5. **Find what closed recently:** issues closed in the last 7 days, comparing `closedAt` in code, not by eye. Leave out those closed as not planned or as duplicates.
 6. **Write the report,** in the format below.
-7. **Ask** what to work on, through an interactive prompt with at most two options. When the branch has work in flight, recommend finishing or checking it first, naming its issues. When step 3 was skipped, don't treat the branch as clear: say its work wasn't checked. Otherwise recommend the first issue that can be started now; when there is none, ask which waiting issue the owner wants to take up.
+7. **Ask** what to work on, through an interactive prompt with at most two options. When the branch has work in flight, recommend finishing or checking it first, naming its issues. Otherwise recommend the first issue that can be started now; when there is none, ask which waiting issue the owner wants to take up. When step 3 was skipped, also say in the question that the branch's work wasn't checked.
 
 ## Report format
 
@@ -102,9 +104,9 @@ Next: run `gh auth login`, then ask again.
 |---|---|---|
 | Not a git repo | doesn't track | Open the project's folder, or tell me where it tracks its work. |
 | The tracker doc names another tracker | doesn't track | Read the issues there; this skill reads only GitHub. |
-| No GitHub remote | doesn't track | Tell me where this project tracks its work, or create a GitHub repo for it. |
+| No GitHub remote: none at all, or only on well-known other hosts | doesn't track | Tell me where this project tracks its work, or create a GitHub repo for it. |
 | Issues turned off | doesn't track | Turn on Issues in the repo's GitHub settings. |
 | No issues yet | doesn't track, or "tracks its work in GitHub issues, but none are filed yet" when the tracker doc names GitHub | File the first one; with no tracker doc, set it up first (slipway-setup installs the skills that do it). |
-| The GitHub remote isn't on github.com | can't read | Read the issues on that host directly; this skill reads only github.com. |
+| No github.com remote, but one on another host | can't read | Say which host; if it's GitHub Enterprise, read the issues there directly, since this skill reads only github.com. |
 | `gh` missing or signed out | can't read | Install `gh`, or run `gh auth login`, then ask again. |
 | The repo can't be reached: no access, no network, or a sandbox blocking it | can't read | Give the error in one line, then: check access to the repo, then ask again. |
