@@ -9,7 +9,7 @@ The rules build on the skills and tools listed in `RESOURCES.md`. Point to a res
 - `rules/<category>.md`: one file per stage — `start`, `develop`, `test`, `review`, `ship`, `maintain`, `working-style`.
 - `rules/<category>.<scope>.md`: a sub file for rules that apply only to one kind of project, such as `develop.react.md`, `develop.ui.md`, `ship.store.md`, `ship.website.md`. It opens with one line: "Rules from <category>.md that apply only to <scope>."
 - Make a new sub file only when a rule truly can't be made agnostic.
-- `skills/<name>/SKILL.md`: the plugin's skills, `slipway-rules`, `slipway-setup`, `slipway-update` and `slipway-uninstall`. Every skill name starts with `slipway-`. `slipway-update` reads slipway's version from `.claude-plugin/plugin.json` on GitHub, so a release isn't visible to it until both manifests carry the new `version`.
+- `skills/<name>/SKILL.md`: the plugin's skills, `slipway-rules`, `slipway-setup`, `slipway-update`, `slipway-issues` and `slipway-uninstall`. Every skill name starts with `slipway-`. `slipway-update` reads slipway's version from `.claude-plugin/plugin.json` on GitHub, so a release isn't visible to it until both manifests carry the new `version`.
 - `hooks/hooks.json` and `hooks/*.sh`: the hooks that apply the rules, shared by Claude Code and Codex. `hooks/lib.sh` holds their shared helpers.
 - `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`: the plugin and its marketplace; Codex reads the same marketplace file.
 - `.codex-plugin/plugin.json`: Codex's manifest, which adds its `interface` fields.

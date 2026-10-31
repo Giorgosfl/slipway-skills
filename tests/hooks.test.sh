@@ -123,6 +123,7 @@ expect owner 'gh api graphql -f query="$(cat <<'"'"'EOF'"'"'
 mutation { resolveReviewThread(input: {threadId: "x"}) { thread { isResolved } } }
 EOF
 )"' 'gh api graphql -f query="$Q"' 'gh api graphql -f query="$(cat m.graphql)"' 'gh api graphql -F query=@m.graphql'
+expect none 'gh api graphql -f query='"'"'query { repository(owner: "o", name: "r") { open: issues(states: OPEN, first: 100) { totalCount nodes { number title labels(first: 20) { nodes { name } } parent { number title } subIssuesSummary { total completed } } } closed: issues(states: CLOSED, first: 50, orderBy: {field: UPDATED_AT, direction: DESC}) { totalCount nodes { number title closedAt stateReason parent { number } } } } }'"'"''
 expect none 'gh api graphql -f query="{ viewer { login } }"' 'gh api graphql -f query="fragment f on User { login }"'
 expect push 'SLIPWAY_OK=1 git status && git push' '# Don'"'"'t forget
 git push' 'cat <<EOF

@@ -15,6 +15,7 @@ A slipway is the ramp where a ship is built and launched.
   - `slipway-rules` picks the rule file for the task at hand.
   - `slipway-setup` checks the [resources](RESOURCES.md) the rules build on and installs the missing ones, after asking.
   - `slipway-update` checks slipway and those resources for updates, and applies the ones you pick.
+  - `slipway-issues` reports the project's GitHub issues: what an agent can start now, what waits on you, and what closed recently. When the project doesn't use GitHub issues, it says so.
   - `slipway-uninstall` undoes exactly what setup installed. Only you can start it.
 
 ## Install
