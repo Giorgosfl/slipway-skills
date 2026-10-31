@@ -1,6 +1,6 @@
 {
   "name": "slipway",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Curated engineering rules for every stage of an app, product or server, with hooks that apply them and a setup skill for the skills they build on.",
   "author": {
     "name": "Giorgosfl",
