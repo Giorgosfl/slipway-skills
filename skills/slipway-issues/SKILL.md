@@ -19,7 +19,6 @@ Reads the repo's GitHub issues and gives the owner one short overview: what an a
    - `gh` is installed and signed in: `gh auth status --active --hostname github.com`.
    - With more than one github.com repo among the remotes, as in a fork, use the one `gh repo set-default --view` names; when none is set, ask the owner which one.
    - The repo can be read and has Issues turned on: `gh repo view <owner>/<name> --json hasIssuesEnabled,defaultBranchRef`.
-   - When the github.com repo has Issues turned off or no issues, and another remote is on a host that isn't well known, add to the first line that the issues on that host weren't checked.
 2. **Read the issues** in one query. Write the owner, the name and the date 7 days ago into it literally, on one line, with no `$` variables or shell expansions, so the slipway guard sees a read and lets it through:
 
    ```bash
@@ -108,6 +107,8 @@ Next: run `gh auth login`, then ask again.
 | No GitHub remote: none at all, or only on well-known other hosts | doesn't track | Tell me where this project tracks its work, or create a GitHub repo for it. |
 | Issues turned off | doesn't track | Turn on Issues in the repo's GitHub settings. |
 | No issues yet | doesn't track, or "tracks its work in GitHub issues, but none are filed yet" when the tracker doc names GitHub | File the first one; with no tracker doc, set it up first (slipway-setup installs the skills that do it). |
-| No github.com remote, but one on another host | can't read, naming the host: "I can't read acme-app's issues on git.example.com" | If that's GitHub Enterprise, read the issues there directly, since this skill reads only github.com; otherwise tell me where this project tracks its work. |
+| No github.com remote, but one on another host | can't read, naming the host: "I can't read acme-app's issues on git.example.com: this skill reads only github.com" | If that's GitHub Enterprise, read the issues there directly, since this skill reads only github.com; otherwise tell me where this project tracks its work. |
 | `gh` missing or signed out | can't read | Install `gh`, or run `gh auth login`, then ask again. |
 | The repo can't be reached: no access, no network, or a sandbox blocking it | can't read | Give the error in one line, then: check access to the repo, then ask again. |
+
+- **A github.com mirror:** when the failed check is "Issues turned off" or "No issues yet", and another remote is on a host that isn't well known, the work may be tracked on that host. Report it with the "No github.com remote, but one on another host" row instead, adding what the github.com repo showed: "I can't read acme-app's issues on git.example.com: this skill reads only github.com, and its github.com repo has Issues turned off."
